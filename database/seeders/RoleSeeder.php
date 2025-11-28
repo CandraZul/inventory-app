@@ -7,21 +7,37 @@ use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder{
     public function run(){
-        $admin = Role::create(['name' => 'admin']);
-        $user = Role::create(['name' => 'user']);
+        $super_admin = Role::firstOrCreate(['name' => 'super admin']);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $dosen = Role::firstOrCreate(['name' => 'dosen']);
+        $mahasiswa = Role::firstOrCreate(['name' => 'mahasiswa']);
 
         $user1 = User::create([
-            'name' => 'Admin User',
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('password')
+        ]);
+        $user1->assignRole($super_admin);
+
+        $user2 = User::create([
+            'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => bcrypt('password')
         ]);
-        $user1->assignRole('admin');
+        $user2->assignRole($admin);
 
-        $user2 = User::create([
-            'name' => 'User',
-            'email' => 'user@example.com',
+        $user3 = User::create([
+            'name' => 'Dosen',
+            'email' => 'dosen@example.com',
             'password' => bcrypt('password')
         ]);
-        $user2->assignRole('user');
+        $user3->assignRole($dosen);
+
+        $user1 = User::create([
+            'name' => 'Mahasiswa',
+            'email' => 'mahasiswa@example.com',
+            'password' => bcrypt('password')
+        ]);
+        $user1->assignRole($mahasiswa);
     }
 }
