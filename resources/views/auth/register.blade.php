@@ -61,6 +61,38 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-form-label text-md-end">Register sebagai</label>
+                            <div class="col-md-6">
+                                <select name="role" class="form-control" id="role" required>
+                                    <option value="">-- pilih role --</option>
+                                    <option value="mahasiswa">Mahasiswa</option>
+                                    <option value="dosen">Dosen</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="nip_field" style="display:none;">
+                            <label class="col-md-4 col-form-label text-md-end">NIP</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="nip">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="nim_field" style="display:none;">
+                            <label class="col-md-4 col-form-label text-md-end">NIM</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="nim">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-md-4 col-form-label text-md-end">Contact</label>
+                            <div class="col-md-6">
+                                <input id="contact" type="text" class="form-control" name="contact">
+                            </div>
+                        </div>
+
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -69,9 +101,32 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        document.getElementById('role').addEventListener('change', function () {
+                            let role = this.value;
+
+                            // ambil elemen field
+                            let nipField = document.getElementById('nip_field');
+                            let nimField = document.getElementById('nim_field');
+
+                            // reset
+                            nipField.style.display = 'none';
+                            nimField.style.display = 'none';
+
+                            if (role === 'dosen') {
+                                nipField.style.display = 'flex';   // tampilkan NIP
+                            } else if (role === 'mahasiswa') {
+                                nimField.style.display = 'flex';   // tampilkan NIM
+                            }
+                        });
+                    </script>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+
