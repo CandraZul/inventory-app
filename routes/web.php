@@ -34,4 +34,7 @@ Route::post('/register/dosen', [RegisterDosenController::class, 'store']);
 Route::get('/register/mahasiswa', [RegisterMahasiswaController::class, 'create']);
 Route::post('/register/mahasiswa', [RegisterMahasiswaController::class, 'store']);
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('/users', App\Http\Controllers\UserController::class);
+});
 
