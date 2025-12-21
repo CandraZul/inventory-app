@@ -52,12 +52,12 @@ class User extends Authenticatable
 
     public function dosenProfile()
     {
-        return $this->hasOne(ProfileDosen::class);
+        return $this->hasOne(ProfileDosen::class, 'user_id', 'id');
     }
 
     public function mahasiswaProfile()
     {
-        return $this->hasOne(ProfileMahasiswa::class);
+        return $this->hasOne(ProfileMahasiswa::class, 'user_id', 'id');
     }
 
 }

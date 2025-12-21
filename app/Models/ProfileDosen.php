@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProfileDosen extends Model
 {
     protected $table = 'profiles_dosen';
+    protected $fillable = ['user_id', 'nip', 'kontak'];
     protected $guarded = [];
 
     public function user()

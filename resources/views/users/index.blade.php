@@ -87,16 +87,14 @@
 
                             @if($user->id != Auth::id())
                                 @can('delete', $user)
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
+                                <div class="inline">
+                                    <button
+                                        onclick="confirmDelete()"
                                         class="text-red-600 hover:text-red-900"
-                                        title="Hapus"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                        title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </button>
-                                </form>
+                                </div>
                                 @endcan
                             @endif
                         </div>
@@ -165,4 +163,82 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Delete Confirmation -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full mx-4">
+        <div class="p-6">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Hapus Pengguna</h3>
+                    <p class="text-sm text-gray-600">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-gray-700 mb-3">
+                    Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->name }}</strong>?
+                </p>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <ul class="text-sm text-red-700 space-y-1">
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle mr-2"></i>
+                            Semua data terkait akan dihapus
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle mr-2"></i>
+                            Riwayat peminjaman akan hilang
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle mr-2"></i>
+                            Pengguna tidak dapat login lagi
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="closeDeleteModal()"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50
+                               rounded-lg transition-colors">
+                    Batal
+                </button>
+                <form id="deleteForm" method="POST" action="{{ route('users.destroy', $user->id) }}" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white
+                                   rounded-lg transition-colors">
+                        Ya, Hapus Pengguna
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+</script>
 @endsection

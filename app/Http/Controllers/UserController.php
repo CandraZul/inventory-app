@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfileDosen;
 use App\Models\ProfileMahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -34,10 +35,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'role' => 'required'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'role' => 'required|in:admin,mahasiswa,dosen'
         ]);
 
         $user = User::create([
@@ -51,16 +52,16 @@ class UserController extends Controller
         if ($request['role'] === 'mahasiswa') {
             ProfileMahasiswa::create([
                 'user_id' => $user->id,
-                'nim' => $request->nim,
-                'kontak' => $request->kontak
+                'nim' => $request->id_number,
+                'kontak' => $request->phone
             ]);
         }
 
         if ($request['role'] === 'dosen') {
-            ProfileMahasiswa::create([
+            ProfileDosen::create([
                 'user_id' => $user->id,
-                'nip' => $request->nip,
-                'kontak' => $request->kontak
+                'nip' => $request->id_number,
+                'kontak' => $request->phone
             ]);
         }
 
@@ -82,9 +83,10 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
+        $user->load(['dosenProfile', 'mahasiswaProfile', 'roles']);
+
         $roles = Role::pluck('name', 'name');
         $userRole = $user->roles->pluck('name')->first();
-
 
         return view('users.edit', compact('user', 'roles', 'userRole'));
     }
@@ -92,7 +94,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $user)
+    public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required',
@@ -106,6 +108,38 @@ class UserController extends Controller
         ]);
 
          $user->syncRoles([$request->role]);
+
+        if ($request->role === 'mahasiswa') {
+            $profile = $user->mahasiswaProfile;
+            if ($profile) {
+                $profile->update([
+                    'nim' => $request->id_number,
+                    'kontak' => $request->phone
+                ]);
+            } else {
+                ProfileMahasiswa::create([
+                    'user_id' => $user->id,
+                    'nim' => $request->id_number,
+                    'kontak' => $request->phone
+                ]);
+            }
+        }
+
+        if ($request->role === 'dosen') {
+            $profile = $user->dosenProfile;
+            if ($profile) {
+                $profile->update([
+                    'nip' => $request->id_number,
+                    'kontak' => $request->phone
+                ]);
+            } else {
+                ProfileDosen::create([
+                    'user_id' => $user->id,
+                    'nip' => $request->id_number,
+                    'kontak' => $request->phone
+                ]);
+            }
+        }
 
         return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
     }
