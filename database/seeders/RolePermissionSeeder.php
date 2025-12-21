@@ -21,8 +21,11 @@ class RolePermissionSeeder extends Seeder
             'view borrowings',
             'view returns',
             'view reports',
-            'view users',
+            'view user',
             'view settings',
+            'edit user',
+            'delete user',
+            'create user',
         ];
 
         foreach ($permissions as $permission) {

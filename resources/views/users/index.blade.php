@@ -13,10 +13,10 @@
                 <h2 class="text-xl font-bold text-gray-800">Daftar Pengguna</h2>
                 <p class="text-gray-600 mt-1">Total {{ $users->total() }} pengguna terdaftar</p>
             </div>
-            
+
             <div class="mt-4 md:mt-0">
                 @can('create users')
-                <a href="{{ route('users.create') }}" 
+                <a href="{{ route('users.create') }}"
                     class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
                     <i class="fas fa-user-plus mr-2"></i>
                     Tambah Pengguna
@@ -36,9 +36,6 @@
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Role
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Terdaftar
@@ -63,55 +60,41 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            @if($user->role == 'admin') bg-purple-100 text-purple-800
-                            @elseif($user->role == 'staff') bg-blue-100 text-blue-800
-                            @elseif($user->role == 'dosen') bg-green-100 text-green-800
-                            @else bg-gray-100 text-gray-800 @endif">
-                            {{ ucfirst($user->role) }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            @if($user->is_active) bg-green-100 text-green-800
-                            @else bg-red-100 text-red-800 @endif">
-                            {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
-                        </span>
+                        <div class="flex gap-2 flex-wrap">
+                            @foreach ($user->getRoleNames() as $role)
+                                <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full
+                                    @if($role === 'admin') bg-purple-100 text-purple-800
+                                    @elseif($role === 'staff') bg-blue-100 text-blue-800
+                                    @elseif($role === 'dosen') bg-green-100 text-green-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ ucfirst($role) }}
+                                </span>
+                            @endforeach
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {{ $user->created_at->format('d M Y') }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-3">
-                            @can('edit users')
-                            <a href="{{ route('users.edit', $user->id) }}" 
+                            @can('update', $user)
+                            <a href="{{ route('users.edit', $user->id) }}"
                                 class="text-green-600 hover:text-green-900" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             @endcan
-                            
+
                             @if($user->id != Auth::id())
-                                @can('delete users')
+                                @can('delete', $user)
                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" 
-                                        class="text-red-600 hover:text-red-900" 
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900"
                                         title="Hapus"
                                         onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
                                         <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                                
-                                @can('toggle users')
-                                <form action="{{ route('users.toggle', $user->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" 
-                                        class="{{ $user->is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-blue-600 hover:text-blue-900' }}" 
-                                        title="{{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                        <i class="fas {{ $user->is_active ? 'fa-user-slash' : 'fa-user-check' }}"></i>
                                     </button>
                                 </form>
                                 @endcan
@@ -145,7 +128,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex items-center">
             <div class="p-3 bg-blue-100 text-blue-600 rounded-lg mr-4">
@@ -157,7 +140,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex items-center">
             <div class="p-3 bg-green-100 text-green-600 rounded-lg mr-4">
@@ -169,7 +152,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex items-center">
             <div class="p-3 bg-gray-100 text-gray-600 rounded-lg mr-4">

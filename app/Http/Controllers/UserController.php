@@ -78,10 +78,11 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $user)
+    public function edit(User $user)
     {
+        $this->authorize('update', $user);
+
         $roles = Role::pluck('name', 'name');
-        $user = User::with(['dosenProfile', 'mahasiswaProfile'])->findOrFail($user);
         $userRole = $user->roles->pluck('name')->first();
 
 
@@ -112,9 +113,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $user)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($user);
+        $this->authorize('delete', $user);
         $user->delete();
         return back()->with('success', 'User berhasil dihapus.');
     }
