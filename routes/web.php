@@ -3,12 +3,13 @@
 use App\Http\Controllers\Auth\RegisterAdminController;
 use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
+use App\Http\Controllers\SidebarController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->name('dashboard');
 
 Auth::routes();
 
@@ -18,7 +19,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin', 'admin');
 });
 
-Route::middleware(['auth', 'role:dosen|mahasiswa'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
 });
 
@@ -38,3 +39,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('/users', App\Http\Controllers\UserController::class);
 });
 
+Route::post('/toggle-sidebar', [SidebarController::class, 'toggle'])
+    ->middleware(['auth'])
+    ->name('toggle-sidebar');

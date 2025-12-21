@@ -12,28 +12,28 @@ class RoleSeeder extends Seeder{
         $dosen = Role::firstOrCreate(['name' => 'dosen']);
         $mahasiswa = Role::firstOrCreate(['name' => 'mahasiswa']);
 
-        $user1 = User::create([
+        $user1 = User::firstOrCreate([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
             'password' => bcrypt('password')
         ]);
         $user1->assignRole($super_admin);
 
-        $user2 = User::create([
+        $user2 = User::firstOrCreate([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => bcrypt('password')
         ]);
         $user2->assignRole($admin);
 
-        $user3 = User::create([
+        $user3 = User::firstOrCreate([
             'name' => 'Dosen',
             'email' => 'dosen@example.com',
             'password' => bcrypt('password')
         ]);
         $user3->assignRole($dosen);
 
-        $user1 = User::create([
+        $user1 = User::firstOrCreate([
             'name' => 'Mahasiswa',
             'email' => 'mahasiswa@example.com',
             'password' => bcrypt('password')
