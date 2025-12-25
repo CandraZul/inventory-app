@@ -115,6 +115,7 @@
 
 <!-- Statistik Pengguna -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+    @can('view super admin')
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex flex-col items-center text-center">
             <div class="p-3 bg-purple-100 text-purple-600 rounded-lg mb-3">
@@ -126,7 +127,9 @@
             </div>
         </div>
     </div>
+    @endcan
 
+    @can('view admin')
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex flex-col items-center text-center">
             <div class="p-3 bg-blue-100 text-blue-600 rounded-lg mb-3">
@@ -138,6 +141,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     <div class="bg-white rounded-xl shadow-md p-6">
         <div class="flex flex-col text-center items-center">

@@ -135,7 +135,14 @@
                                     Role Pengguna <span class="text-red-500">*</span>
                                 </label>
                                 <div class="grid grid-cols-2 gap-3">
-                                    @foreach(['admin', 'dosen', 'mahasiswa'] as $role)
+                                    @php
+                                        $roles = ['dosen', 'mahasiswa'];
+
+                                        if(auth()->user()->hasRole('super admin')) {
+                                            $roles[] = 'admin';
+                                        }
+                                    @endphp
+                                    @foreach($roles as $role)
                                         <label class="relative flex cursor-pointer">
                                             <input type="radio" name="role" value="{{ $role }}"
                                                    {{ old('role', $user->getRoleNames()->first()) == $role ? 'checked' : '' }}

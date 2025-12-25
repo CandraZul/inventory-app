@@ -10,17 +10,23 @@ class UserPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $authUser): bool
     {
-        return false;
+        return $authUser->hasAnyRole(['admin', 'super admin']);
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $authUser, User $targetUser): bool
     {
-        return false;
+        if ($targetUser->hasRole('super admin')) {
+            return false;
+        }
+        if ($targetUser->hasRole('admin')) {
+            return $authUser->hasRole('admin');
+        }
+        return true;
     }
 
     /**

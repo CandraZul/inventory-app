@@ -16,19 +16,37 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles')->paginate(10);
-        $stats = [
+        $this->authorize('viewAny', User::class);
+
+        $baseQuery = User::query();
+
+        if (auth()->user()->hasRole('admin')) {
+            $baseQuery->whereDoesntHave('roles', function ($q) {
+                $q->whereIn('name', ['super admin', 'admin']);
+            });
+        }
+
+        $users = (clone $baseQuery)
+            ->with('roles')
+            ->paginate(10);
+
+        $stats = (clone $baseQuery)
+            ->with('roles')
+            ->get()
+            ->groupBy(fn ($user) => $user->getRoleNames()->first())
+            ->map->count()
+            ->toArray();
+
+        $stats = array_merge([
             'super admin' => 0,
             'admin' => 0,
             'dosen' => 0,
             'mahasiswa' => 0,
-        ];
+        ], $stats);
 
-        foreach ($users as $user) {
-            $stats[$user->getRoleNames()->first()] += 1;
-        }
         return view('users.index', compact('users', 'stats'));
     }
+
 
     /**
      * Show the form for creating a new resource.

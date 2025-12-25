@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
             $agent = new Agent();
             return $agent->isMobile();
         });
+
     }
 }

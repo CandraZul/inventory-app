@@ -32,7 +32,7 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        $admin = Role::where('name', 'admin')->first();
+        $admin = Role::where('name', ['super admin', 'admin'])->first();
 
         if ($admin) {
             $admin->syncPermissions($permissions);
