@@ -17,7 +17,17 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->paginate(10);
-        return view('users.index', compact('users'));
+        $stats = [
+            'super admin' => 0,
+            'admin' => 0,
+            'dosen' => 0,
+            'mahasiswa' => 0,
+        ];
+
+        foreach ($users as $user) {
+            $stats[$user->getRoleNames()->first()] += 1;
+        }
+        return view('users.index', compact('users', 'stats'));
     }
 
     /**

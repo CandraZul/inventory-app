@@ -63,8 +63,8 @@
                         <div class="flex gap-2 flex-wrap">
                             @foreach ($user->getRoleNames() as $role)
                                 <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full
-                                    @if($role === 'admin') bg-purple-100 text-purple-800
-                                    @elseif($role === 'staff') bg-blue-100 text-blue-800
+                                    @if($role === 'super admin') bg-purple-100 text-purple-800
+                                    @elseif($role === 'admin') bg-blue-100 text-blue-800
                                     @elseif($role === 'dosen') bg-green-100 text-green-800
                                     @else bg-gray-100 text-gray-800
                                     @endif">
@@ -116,32 +116,32 @@
 <!-- Statistik Pengguna -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
     <div class="bg-white rounded-xl shadow-md p-6">
-        <div class="flex items-center">
-            <div class="p-3 bg-purple-100 text-purple-600 rounded-lg mr-4">
+        <div class="flex flex-col items-center text-center">
+            <div class="p-3 bg-purple-100 text-purple-600 rounded-lg mb-3">
                 <i class="fas fa-user-shield text-xl"></i>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Admin</p>
-                <p class="text-2xl font-bold text-gray-800">{{ $stats['admin'] ?? 0 }}</p>
+                <p class="text-sm text-gray-500">Super Admin</p>
+                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['super admin'] ?? 0 }}</p>
             </div>
         </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-6">
-        <div class="flex items-center">
-            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg mr-4">
+        <div class="flex flex-col items-center text-center">
+            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg mb-3">
                 <i class="fas fa-user-tie text-xl"></i>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Staff</p>
-                <p class="text-2xl font-bold text-gray-800">{{ $stats['staff'] ?? 0 }}</p>
+                <p class="text-sm text-gray-500">Admin</p>
+                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['admin'] ?? 0 }}</p>
             </div>
         </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-6">
-        <div class="flex items-center">
-            <div class="p-3 bg-green-100 text-green-600 rounded-lg mr-4">
+        <div class="flex flex-col text-center items-center">
+            <div class="p-3 bg-green-100 text-green-600 rounded-lg mb-3">
                 <i class="fas fa-chalkboard-teacher text-xl"></i>
             </div>
             <div>
@@ -152,8 +152,8 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-6">
-        <div class="flex items-center">
-            <div class="p-3 bg-gray-100 text-gray-600 rounded-lg mr-4">
+        <div class="flex flex-col text-center items-center">
+            <div class="p-3 bg-gray-100 text-gray-600 rounded-lg mb-3">
                 <i class="fas fa-users text-xl"></i>
             </div>
             <div>
