@@ -13,7 +13,7 @@
                 </div>
             </div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Inventory Laboratorium TIK
+                Inventory Laboratorium PTIK
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Sistem Manajemen Inventori dan Peminjaman
@@ -24,7 +24,7 @@
         <div class="bg-white py-8 px-6 shadow-xl rounded-2xl sm:px-10">
             <form class="space-y-6" method="POST" action="{{ route('login') }}">
                 @csrf
-                
+
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">
                         Email
@@ -84,6 +84,29 @@
                         Masuk ke Sistem
                     </button>
                 </div>
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500">
+                            Belum punya akun?
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <a href="{{ route('register') }}"
+                           class="w-full flex justify-center py-3 px-4 border border-primary-600 rounded-lg
+                               shadow-sm text-sm font-medium text-primary-600 bg-white hover:bg-accent-50
+                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500
+                               transition-colors">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Daftar Akun Baru
+                        </a>
+                    </div>
+                </div>
             </form>
 
             <div class="mt-6">
@@ -92,8 +115,8 @@
                         <div class="w-full border-t border-gray-300"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">
-                            Laboratorium Teknologi Informasi dan Komunikasi
+                        <span class="text-center px-1.5 bg-white text-gray-500">
+                            Laboratorium Pendidikan Teknik Informatika dan Komputer
                         </span>
                     </div>
                 </div>
@@ -106,7 +129,7 @@
     function togglePassword() {
         const passwordInput = document.getElementById('password');
         const passwordIcon = document.getElementById('password-icon');
-        
+
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
             passwordIcon.classList.remove('fa-eye');
