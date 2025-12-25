@@ -283,7 +283,7 @@
                         <div id="profile-dropdown"
                              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden z-50">
                             <div class="py-2">
-                                <a href="#"
+                                <a href="{{ route('profile') }}"
                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <i class="fas fa-user mr-3 text-gray-500"></i>
                                     Profil Saya

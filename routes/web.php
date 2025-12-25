@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisterAdminController;
 use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,12 +16,15 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin', 'admin');
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Admin
