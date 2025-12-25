@@ -89,7 +89,7 @@
                                 @can('delete', $user)
                                 <div class="inline">
                                     <button
-                                        onclick="confirmDelete()"
+                                        onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')"
                                         class="text-red-600 hover:text-red-900"
                                         title="Hapus">
                                         <i class="fas fa-trash"></i>
@@ -180,7 +180,7 @@
 
             <div class="mb-6">
                 <p class="text-gray-700 mb-3">
-                    Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->name }}</strong>?
+                    Apakah Anda yakin ingin menghapus pengguna <strong id="deleteUserName">{{ $user->name }}</strong>?
                 </p>
                 <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                     <ul class="text-sm text-red-700 space-y-1">
@@ -206,7 +206,7 @@
                                rounded-lg transition-colors">
                     Batal
                 </button>
-                <form id="deleteForm" method="POST" action="{{ route('users.destroy', $user->id) }}" class="inline">
+                <form id="deleteForm" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
@@ -221,7 +221,12 @@
 </div>
 
 <script>
-    function confirmDelete() {
+    function confirmDelete(userId, userName) {
+        document.getElementById('deleteUserName').innerText = userName;
+
+        const form = document.getElementById('deleteForm');
+        form.action = `users/${userId}`;
+
         document.getElementById('deleteModal').classList.remove('hidden');
     }
 
