@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 });
 
 // Admin

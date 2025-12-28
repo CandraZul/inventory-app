@@ -18,34 +18,34 @@
                                 <div class="w-32 h-32 rounded-full bg-gradient-to-br from-accent-500 to-accent-600
                                         flex items-center justify-center text-white text-4xl font-bold
                                         shadow-lg">
-                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             </div>
 
                             <!-- User Info -->
-                            <h2 class="text-xl font-bold text-gray-800">{{ Auth::user()->name }}</h2>
-                            <p class="text-gray-600 mt-1">{{ Auth::user()->email }}</p>
+                            <h2 class="text-xl font-bold text-gray-800">{{ $user->name }}</h2>
+                            <p class="text-gray-600 mt-1">{{ $email }}</p>
 
                             <!-- Role Badge -->
                             <div class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                    @if(Auth::user()->role == 'admin') bg-purple-100 text-purple-800
-                                    @elseif(Auth::user()->role == 'staff') bg-blue-100 text-blue-800
-                                    @elseif(Auth::user()->role == 'dosen') bg-green-100 text-green-800
+                                    @if($role == 'admin') bg-purple-100 text-purple-800
+                                    @elseif($role == 'staff') bg-blue-100 text-blue-800
+                                    @elseif($role == 'dosen') bg-green-100 text-green-800
                                     @else bg-gray-100 text-gray-800 @endif">
                                 <i class="fas
-                                @if(Auth::user()->role == 'admin') fa-user-shield
-                                @elseif(Auth::user()->role == 'staff') fa-user-tie
-                                @elseif(Auth::user()->role == 'dosen') fa-chalkboard-teacher
+                                @if($user->role == 'admin') fa-user-shield
+                                @elseif($user->role == 'staff') fa-user-tie
+                                @elseif($user->role == 'dosen') fa-chalkboard-teacher
                                 @else fa-user-graduate @endif
                                 mr-2"></i>
-                                {{ ucfirst(Auth::user()->role) }}
+                                {{ ucfirst($role) }}
                             </div>
 
                             <!-- Member Since -->
                             <div class="mt-4 pt-4 border-t border-gray-200">
                                 <p class="text-sm text-gray-500">Bergabung sejak</p>
                                 <p class="text-sm font-medium text-gray-800">
-                                    {{ Auth::user()->created_at->format('d M Y') }}
+                                    {{ $user->created_at->format('d M Y') }}
                                 </p>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 <label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                                     <i class="fas fa-envelope text-gray-400 mr-3"></i>
-                                    <span class="text-gray-800">{{ $user->email }}</span>
+                                    <span class="text-gray-800">{{ $email }}</span>
                                 </div>
                             </div>
 
@@ -118,7 +118,7 @@
                                 <label class="block text-sm font-medium text-gray-500 mb-1">NIM/NIP</label>
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                                     <i class="fas fa-id-card text-gray-400 mr-3"></i>
-                                    <span class="text-gray-800">{{ $user->mahasiswaProfile->nim ?? $user->dosenProfile->id_number ?? '-' }}</span>
+                                    <span class="text-gray-800">{{ $id_number }}</span>
                                 </div>
                             </div>
 
@@ -127,7 +127,7 @@
                                 <label class="block text-sm font-medium text-gray-500 mb-1">Nomor Telepon</label>
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                                     <i class="fas fa-phone text-gray-400 mr-3"></i>
-                                    <span class="text-gray-800">{{ $user->mahasiswaProfile->kontak ?? $user->dosenProfile->kontak ?? '-' }}</span>
+                                    <span class="text-gray-800">{{ $phone}}</span>
                                 </div>
                             </div>
 
@@ -147,36 +147,11 @@
                                     <span class="text-gray-800 capitalize">{{ $role }}</span>
                                 </div>
                             </div>
-
-{{--                            <!-- Departemen/Prodi -->--}}
-{{--                            <div>--}}
-{{--                                <label class="block text-sm font-medium text-gray-500 mb-1">Departemen/Prodi</label>--}}
-{{--                                <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">--}}
-{{--                                    <i class="fas fa-graduation-cap text-gray-400 mr-3"></i>--}}
-{{--                                    <span class="text-gray-800">--}}
-{{--                                    @if(Auth::user()->department)--}}
-{{--                                            @php--}}
-{{--                                                $departments = [--}}
-{{--                                                    'informatika' => 'Teknik Informatika',--}}
-{{--                                                    'sistem_informasi' => 'Sistem Informasi',--}}
-{{--                                                    'teknik_komputer' => 'Teknik Komputer',--}}
-{{--                                                    'teknologi_informasi' => 'Teknologi Informasi',--}}
-{{--                                                    'ilmu_komputer' => 'Ilmu Komputer',--}}
-{{--                                                    'lainnya' => 'Lainnya'--}}
-{{--                                                ];--}}
-{{--                                            @endphp--}}
-{{--                                            {{ $departments[Auth::user()->department] ?? Auth::user()->department }}--}}
-{{--                                        @else--}}
-{{--                                            ---}}
-{{--                                        @endif--}}
-{{--                                </span>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
                     </div>
 
                     <!-- Profile Edit Form (Hidden by default) -->
-                    <form id="profile-edit" method="POST" action="#"
+                    <form id="profile-edit" method="POST" action="/profile"
                           class="p-6 hidden" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -192,7 +167,7 @@
                                         <i class="fas fa-user text-gray-400"></i>
                                     </div>
                                     <input type="text" id="edit-name" name="name"
-                                           value="{{ Auth::user()->name }}"
+                                           value="{{ $user->name }}"
                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg
                                               focus:outline-none focus:ring-2 focus:ring-accent-500
                                               focus:border-accent-500 transition-colors"
@@ -213,7 +188,7 @@
                                         <i class="fas fa-envelope text-gray-400"></i>
                                     </div>
                                     <input type="email" id="edit-email" name="email"
-                                           value="{{ Auth::user()->email }}"
+                                           value="{{ $email }}"
                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg
                                               focus:outline-none focus:ring-2 focus:ring-accent-500
                                               focus:border-accent-500 transition-colors"
@@ -234,7 +209,7 @@
                                         <i class="fas fa-id-card text-gray-400"></i>
                                     </div>
                                     <input type="text" id="edit-id_number" name="id_number"
-                                           value="{{ Auth::user()->id_number }}"
+                                           value="{{ $id_number }}"
                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg
                                               focus:outline-none focus:ring-2 focus:ring-accent-500
                                               focus:border-accent-500 transition-colors">
@@ -251,43 +226,15 @@
                                         <i class="fas fa-phone text-gray-400"></i>
                                     </div>
                                     <input type="tel" id="edit-phone" name="phone"
-                                           value="{{ Auth::user()->phone }}"
+                                           value="{{ $phone}}"
                                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg
                                               focus:outline-none focus:ring-2 focus:ring-accent-500
                                               focus:border-accent-500 transition-colors">
                                 </div>
                             </div>
 
-                            <!-- Departemen/Prodi -->
-                            <div>
-                                <label for="edit-department" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Departemen/Prodi
-                                </label>
-                                <select id="edit-department" name="department"
-                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg
-                                           focus:outline-none focus:ring-2 focus:ring-accent-500
-                                           focus:border-accent-500 transition-colors">
-                                    <option value="">Pilih Departemen/Prodi</option>
-                                    <option value="informatika" {{ Auth::user()->department == 'informatika' ? 'selected' : '' }}>Teknik Informatika</option>
-                                    <option value="sistem_informasi" {{ Auth::user()->department == 'sistem_informasi' ? 'selected' : '' }}>Sistem Informasi</option>
-                                    <option value="teknik_komputer" {{ Auth::user()->department == 'teknik_komputer' ? 'selected' : '' }}>Teknik Komputer</option>
-                                    <option value="teknologi_informasi" {{ Auth::user()->department == 'teknologi_informasi' ? 'selected' : '' }}>Teknologi Informasi</option>
-                                    <option value="ilmu_komputer" {{ Auth::user()->department == 'ilmu_komputer' ? 'selected' : '' }}>Ilmu Komputer</option>
-                                    <option value="lainnya" {{ Auth::user()->department == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                </select>
-                            </div>
                         </div>
 
-                        <!-- Notes -->
-                        <div class="mt-6">
-                            <label for="edit-notes" class="block text-sm font-medium text-gray-700 mb-2">
-                                Catatan
-                            </label>
-                            <textarea id="edit-notes" name="notes" rows="3"
-                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg
-                                         focus:outline-none focus:ring-2 focus:ring-accent-500
-                                         focus:border-accent-500 transition-colors">{{ Auth::user()->notes }}</textarea>
-                        </div>
 
                         <!-- Form Actions -->
                         <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
@@ -325,7 +272,7 @@
                         <!-- Change Password -->
                         <div class="mb-8">
                             <h3 class="text-lg font-medium text-gray-800 mb-4">Ubah Kata Sandi</h3>
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('profile.update-password') }}">
                                 @csrf
                                 @method('PUT')
 
@@ -363,7 +310,7 @@
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <i class="fas fa-key text-gray-400"></i>
                                             </div>
-                                            <input type="password" id="password" name="password"
+                                            <input type="password" id="password" name="new_password"
                                                    class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg
                                                       focus:outline-none focus:ring-2 focus:ring-accent-500
                                                       focus:border-accent-500 transition-colors"
@@ -373,10 +320,9 @@
                                                 <i id="password-icon" class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
                                             </button>
                                         </div>
-                                        @error('password')
+                                        @error('new_password')
                                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
-                                        <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter dengan kombinasi huruf dan angka</p>
                                     </div>
 
                                     <!-- Confirm Password -->
@@ -388,7 +334,7 @@
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <i class="fas fa-key text-gray-400"></i>
                                             </div>
-                                            <input type="password" id="password_confirmation" name="password_confirmation"
+                                            <input type="password" id="password_confirmation" name="new_password_confirmation"
                                                    class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg
                                                       focus:outline-none focus:ring-2 focus:ring-accent-500
                                                       focus:border-accent-500 transition-colors"
@@ -430,9 +376,9 @@
                                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg
                                                    focus:outline-none focus:ring-2 focus:ring-accent-500
                                                    focus:border-accent-500 transition-colors">
-                                            <option value="light" {{ Auth::user()->theme == 'light' ? 'selected' : '' }}>Terang</option>
-                                            <option value="dark" {{ Auth::user()->theme == 'dark' ? 'selected' : '' }}>Gelap</option>
-                                            <option value="auto" {{ Auth::user()->theme == 'auto' ? 'selected' : '' }}>Otomatis</option>
+                                            <option value="light" {{ $user->theme == 'light' ? 'selected' : '' }}>Terang</option>
+                                            <option value="dark" {{ $user->theme == 'dark' ? 'selected' : '' }}>Gelap</option>
+                                            <option value="auto" {{ $user->theme == 'auto' ? 'selected' : '' }}>Otomatis</option>
                                         </select>
                                     </div>
                                 </div>

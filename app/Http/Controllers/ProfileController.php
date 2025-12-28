@@ -20,8 +20,9 @@ class ProfileController extends Controller
         return view('profile', [
             'user' => $user,
             'role' => $user->getRoleNames()->first(),
-            'mahasiswaProfile' => $user->mahasiswaProfile ?? null,
-            'dosenProfile' => $user->dosenProfile ?? null,
+            'email' => $user->email,
+            'id_number' => $user->mahasiswaProfile->nim ?? $user->dosenProfile->nip ?? null,
+            'phone' => $user->mahasiswaProfile->kontak ?? $user->dosenProfile->kontak ?? null,
         ]);
     }
 
@@ -60,7 +61,7 @@ class ProfileController extends Controller
                 ['user_id' => $user->id],
                 [
                     'nim' => $request->id_number,
-                    'kontak' => $request->kontak,
+                    'kontak' => $request->phone,
                 ]
             );
         }
@@ -70,12 +71,31 @@ class ProfileController extends Controller
                 ['user_id' => $user->id],
                 [
                     'nip' => $request->id_number,
-                    'kontak' => $request->kontak,
+                    'kontak' => $request->phone,
                 ]
             );
         }
 
-        return redirect()->route('profile.index')
+        return redirect()->route('profile')
             ->with('success', 'Profil berhasil diperbarui');
+    }
+
+    public function updatePassword(Request $request){
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' =>'Password lama yang anda masukan salah']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Password berhasil diperbarui');
     }
 }
