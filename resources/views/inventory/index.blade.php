@@ -42,6 +42,9 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Lokasi
                         </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Aksi
+                        </th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -72,6 +75,27 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ $item->lokasi }}
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <div class="flex space-x-2">
+                                    <!-- Tombol Edit -->
+                                    <a href="{{ route('inventory.edit', $item->id) }}"
+                                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                        Edit
+                                    </a>
+
+                                    <!-- Tombol Hapus -->
+                                    <form action="{{ route('inventory.destroy', $item->id) }}" method="POST"
+                                          onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+
                         </tr>
                     @endforeach
                     </tbody>
