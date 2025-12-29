@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -47,3 +48,8 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
 Route::post('/toggle-sidebar', [SidebarController::class, 'toggle'])
     ->middleware(['auth'])
     ->name('toggle-sidebar');
+
+// Inventory
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
