@@ -13,9 +13,14 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::redirect('/home', '/');
+
+// tak matiin dulu ya
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

@@ -7,10 +7,6 @@
     <div class="grid grid-cols-1 gap-8">
         <!-- Header dengan Tombol Tambah -->
         <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Data Inventory</h1>
-                <p class="text-gray-600">Daftar lengkap barang inventori TIK</p>
-            </div>
             <a href="{{ route('inventory.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-3 rounded-lg font-medium flex items-center">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Barang

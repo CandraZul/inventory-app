@@ -131,7 +131,7 @@
 
                     <!-- Inventori -->
                     @can('view inventory')
-                        <a href="#"
+                        <a href="{{ route('inventory.index') }}"
                            class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('inventory.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                             <i class="fas fa-boxes w-5 text-center {{ request()->routeIs('inventory.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                             @if(!session('sidebar_collapsed'))

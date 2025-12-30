@@ -1,3 +1,4 @@
+@include('dashboard')
 @extends('layouts.app')
 
 @section('content')
