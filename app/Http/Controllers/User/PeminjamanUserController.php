@@ -16,7 +16,6 @@ class PeminjamanUserController extends Controller
     {
         $user = Auth::user();
         
-        // Hitung statistik
         $sedangDipinjam = Peminjaman::where('user_id', $user->id)
             ->where('status', 'dipinjam')
             ->count();
@@ -28,7 +27,6 @@ class PeminjamanUserController extends Controller
         $totalRiwayat = Peminjaman::where('user_id', $user->id)
             ->count();
         
-        // Aktivitas terbaru (tidak digunakan di view, tapi bisa ditambahkan nanti)
         $recentActivities = Peminjaman::with('details.inventory')
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -45,7 +43,7 @@ class PeminjamanUserController extends Controller
 
     public function index(Request $request)
     {
-        $query = Inventory::where('jumlah', '>', 0); // Hanya barang yang ada stok
+        $query = Inventory::where('jumlah', '>', 0);
         
         if ($request->search) {
             $query->where('nama_barang', 'like', '%' . $request->search . '%');
@@ -53,16 +51,13 @@ class PeminjamanUserController extends Controller
         
         $inventories = $query->paginate(10);
         
-        // Ambil data keranjang dari session
         $cart = session()->get('borrowing_cart', []);
         $cartCount = count($cart);
         
         return view('borrowing.pinjam', compact('inventories', 'cartCount'));
     }
     
-    /**
-     * Tambah barang ke keranjang (session)
-     */
+    // Tambahkan barang ke keranjang
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -80,7 +75,6 @@ class PeminjamanUserController extends Controller
             ]);
         }
         
-        // Ambil cart dari session
         $cart = session()->get('borrowing_cart', []);
         
         // Cek apakah barang sudah ada di cart
@@ -117,7 +111,6 @@ class PeminjamanUserController extends Controller
             ];
         }
         
-        // Simpan ke session
         session(['borrowing_cart' => $cart]);
         
         return response()->json([
@@ -127,9 +120,7 @@ class PeminjamanUserController extends Controller
         ]);
     }
     
-    /**
-     * Tampilkan isi keranjang
-     */
+    //Menampilkan isi keranjang
     public function viewCart()
     {
         $cart = session()->get('borrowing_cart', []);
@@ -151,9 +142,7 @@ class PeminjamanUserController extends Controller
         return view('borrowing.cart', compact('cartItems'));
     }
     
-    /**
-     * Update item di keranjang
-     */
+    // Update isi keranjang
     public function updateCart(Request $request)
     {
         $request->validate([
@@ -167,7 +156,6 @@ class PeminjamanUserController extends Controller
         foreach ($cart as $index => $item) {
             if ($item['inventory_id'] == $request->inventory_id) {
                 if ($request->action == 'increment') {
-                    // Cek stok sebelum increment
                     if (($item['jumlah'] + 1) > $inventory->jumlah) {
                         return response()->json([
                             'success' => false,
@@ -190,9 +178,7 @@ class PeminjamanUserController extends Controller
         ]);
     }
     
-    /**
-     * Hapus item dari keranjang
-     */
+    // Hapus item dari keranjang
     public function removeFromCart(Request $request)
     {
         $request->validate([
@@ -201,12 +187,10 @@ class PeminjamanUserController extends Controller
         
         $cart = session()->get('borrowing_cart', []);
         
-        // Filter out the item to remove
         $cart = array_filter($cart, function($item) use ($request) {
             return $item['inventory_id'] != $request->inventory_id;
         });
         
-        // Reset array keys
         $cart = array_values($cart);
         
         session(['borrowing_cart' => $cart]);
@@ -218,9 +202,7 @@ class PeminjamanUserController extends Controller
         ]);
     }
     
-    /**
-     * Kosongkan keranjang
-     */
+    // Mengosongkan keranjang
     public function clearCart()
     {
         session()->forget('borrowing_cart');
@@ -229,9 +211,7 @@ class PeminjamanUserController extends Controller
             ->with('success', 'Keranjang berhasil dikosongkan');
     }
 
-    /**
-     * Submit peminjaman dari keranjang
-     */
+    // Submit peminjaman
     public function submitPeminjaman(Request $request)
     {
         $user = Auth::user();
@@ -298,12 +278,11 @@ class PeminjamanUserController extends Controller
     {
         $user = Auth::user();
         
-        // Query peminjaman dengan eager loading
         $query = Peminjaman::with(['details.inventory'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc');
         
-        // Filter by status jika ada
+        // Filter by status
         if ($request->status) {
             $query->where('status', $request->status);
         }

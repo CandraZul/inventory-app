@@ -64,18 +64,18 @@ Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('
 Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
 Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 
-// ========== PERBAIKAN ROUTE BORROWING ==========
+//User Interface (Side Pengguna)
 Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(function () {
     
-    // Dashboard
+    //Dashboard
     Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
         ->name('dashboard');
     
-    // Halaman pinjam barang
+    //Halaman pinjam 
     Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
         ->name('pinjam');
     
-    // Keranjang routes
+    //Keranjang 
     Route::post('/cart/add', [PeminjamanUserController::class, 'addToCart'])
         ->name('cart.add');
     
@@ -94,12 +94,11 @@ Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(func
     Route::post('/submit', [PeminjamanUserController::class, 'submitPeminjaman'])
         ->name('submit');
     
-    // Riwayat
+    //Riwayat
     Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
         ->name('riwayat');
 });
 
-// ========== PERBAIKAN ROUTE SURAT ==========
 Route::middleware(['auth'])->prefix('surat')->name('borrowing.surat.')->group(function () {
     Route::get('/upload', [SuratController::class, 'create'])
         ->name('upload');
@@ -110,17 +109,16 @@ Route::middleware(['auth'])->prefix('surat')->name('borrowing.surat.')->group(fu
     Route::get('/template', [SuratController::class, 'downloadTemplate'])
         ->name('template');
     
-    // ROUTE INI UNTUK MENU SIDEBAR
     Route::get('/list', [SuratController::class, 'index'])
         ->name('list');
 
-    // Tambah route untuk cancel surat (perbaiki prefix)
+    //Cancel surat
     Route::delete('/{id}/cancel', [SuratController::class, 'cancel'])
         ->name('cancel');
 });
 
 
-// Tambahkan route logout jika belum ada
+//Logout
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');

@@ -10,17 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
 {
-    /**
-     * Tampilkan form upload surat
-     */
+    // Form upload surat
     public function create()
     {
         return view('borrowing.upload-surat');
     }
     
-    /**
-     * Simpan surat yang diupload
-     */
+    // Simpan surat yang diupload
     public function store(Request $request)
     {
         $request->validate([
@@ -76,21 +72,18 @@ class SuratController extends Controller
     
     public function downloadTemplate()
     {
-        // HANYA PAKAI FILE BARU
         $templatePath = storage_path('app/public/templates/template_surat_pinjam_new.docx');
         
-        // JANGAN ada fallback ke file lama
         if (!file_exists($templatePath)) {
             return back()->with('error', 'File template tidak ditemukan. Hubungi admin.');
         }
         
-        // FORCE DOWNLOAD dengan timestamp di nama file
         $timestamp = time();
         $fileName = "Template_Surat_Peminjaman_{$timestamp}.docx";
         
         return response()->download(
             $templatePath, 
-            $fileName, // Nama UNIK setiap download
+            $fileName,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
@@ -100,9 +93,7 @@ class SuratController extends Controller
         );
     }
     
-    /**
-     * Buat template default jika belum ada
-     */
+    // Template default buat jaga-jaga
     private function createDefaultTemplate()
     {
         $templateDir = storage_path('app/public/templates');
@@ -126,9 +117,7 @@ class SuratController extends Controller
         return file_exists($templatePath);
     }
     
-    /**
-     * Tampilkan daftar surat yang sudah diupload user
-     */
+    // Menampilkan daftar surat jiakhh
     public function index()
     {
         $user = Auth::user();
@@ -139,9 +128,7 @@ class SuratController extends Controller
         return view('borrowing.daftar-surat', compact('suratList'));
     }
 
-    /**
-     * Batalkan surat (hanya untuk status pending)
-     */
+    // Cancel surat (syarat masi pending)
     public function cancel($id)
     {
         $user = Auth::user();

@@ -169,12 +169,10 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Force cache busting for template download links
     const templateLinks = document.querySelectorAll('a[href*="template"]');
     
     templateLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Only add timestamp if not already present
             let href = this.getAttribute('href');
             if (!href.includes('?v=')) {
                 this.setAttribute('href', href + '?v=' + Date.now());

@@ -169,7 +169,6 @@
 </div>
 
 <script>
-// Tampilkan nama file yang dipilih
 function showFileName(input) {
     if (input.files && input.files[0]) {
         const fileName = input.files[0].name;
@@ -188,7 +187,6 @@ function showFileName(input) {
     }
 }
 
-// Drag and drop functionality
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 
@@ -215,7 +213,7 @@ dropZone.addEventListener('drop', (e) => {
     }
 });
 
-// Form submission
+// Pengumpulan form
 document.getElementById('uploadForm').addEventListener('submit', function(e) {
     const submitBtn = document.getElementById('submitBtn');
     const originalText = submitBtn.innerHTML;
@@ -230,23 +228,19 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
         return;
     }
     
-    // Show loading
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengupload...';
     submitBtn.disabled = true;
     
-    // Re-enable button after 10 seconds (if error)
     setTimeout(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }, 10000);
 });
 
-// Force template cache busting on click
 document.addEventListener('DOMContentLoaded', function() {
     const templateLink = document.querySelector('a[href*="template"]');
     if (templateLink) {
         templateLink.addEventListener('click', function(e) {
-            // Tambah timestamp ke URL
             const originalHref = this.getAttribute('href');
             if (!originalHref.includes('?')) {
                 this.setAttribute('href', originalHref + '?v=' + Date.now());

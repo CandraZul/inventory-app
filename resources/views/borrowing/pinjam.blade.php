@@ -178,10 +178,8 @@
 </div>
 
 <script>
-// Variabel untuk modal
 let currentMaxStok = 0;
 
-// Event listener untuk tombol "Tambah ke Keranjang"
 document.addEventListener('DOMContentLoaded', function() {
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
     
@@ -195,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Close modal when clicking outside
     document.getElementById('cartModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeModal();

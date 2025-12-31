@@ -520,7 +520,6 @@
     </div>
 
     <script>
-        // Sidebar state
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -543,11 +542,7 @@
                     sidebarToggle.innerHTML = '<i class="fas fa-chevron-right text-sm"></i>';
                 }
 
-                // Save state to localStorage (tidak perlu request ke server)
                 localStorage.setItem('sidebar_collapsed', !isCollapsed);
-                
-                // Refresh halaman untuk update Blade session (opsional)
-                // window.location.reload();
             });
         }
 
@@ -560,7 +555,6 @@
             });
         }
 
-        // Close mobile sidebar when clicking overlay
         if (sidebarOverlay) {
             sidebarOverlay.addEventListener('click', function() {
                 sidebar.classList.add('-translate-x-full');
@@ -569,7 +563,6 @@
             });
         }
 
-        // Toggle profile dropdown
         if (profileButton && profileDropdown) {
             profileButton.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -577,7 +570,6 @@
             });
         }
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', function(e) {
             if (profileDropdown && !profileDropdown.contains(e.target) &&
                 profileButton && !profileButton.contains(e.target)) {
@@ -585,7 +577,6 @@
             }
         });
 
-        // Close dropdowns on escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (profileDropdown) profileDropdown.classList.add('hidden');
@@ -609,7 +600,6 @@
             }
         }
 
-        // Handle window resize for mobile
         window.addEventListener('resize', function() {
             if (window.innerWidth >= 768) {
                 // Desktop: show sidebar

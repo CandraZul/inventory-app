@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class SuratPeminjaman extends Model
 {
-    // Tentukan nama table secara eksplisit
     protected $table = 'surat_peminjamans';
     
     protected $fillable = [
@@ -30,9 +29,6 @@ class SuratPeminjaman extends Model
         'tanggal_selesai' => 'date'
     ];
     
-    /**
-     * Get surat URL
-     */
     public function getSuratUrlAttribute()
     {
         if ($this->surat_path) {
@@ -41,17 +37,11 @@ class SuratPeminjaman extends Model
         return null;
     }
     
-    /**
-     * Relationship dengan user
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
     
-    /**
-     * Relationship dengan peminjaman (jika ada)
-     */
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class);
