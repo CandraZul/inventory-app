@@ -1,89 +1,111 @@
-@extends('borrowing.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Keranjang Peminjaman')
-@section('page-title', 'Keranjang Peminjaman')
 
 @section('content')
-
-<div class="card">
-    @if(count($cartItems) > 0)
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="margin: 0;">
-            <i class="fas fa-shopping-cart"></i> Barang yang akan Dipinjam
-        </h3>
-        <span class="badge" style="background: #3b82f6; color: white; padding: 5px 15px; border-radius: 20px;">
-            {{ count($cartItems) }} item
-        </span>
-    </div>
-    
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background: #f8fafc; border-bottom: 2px solid #e5e7eb;">
-                    <th style="padding: 12px; text-align: left; color: #475569;">No</th>
-                    <th style="padding: 12px; text-align: left; color: #475569;">Kode Barang</th>
-                    <th style="padding: 12px; text-align: left; color: #475569;">Nama Barang</th>
-                    <th style="padding: 12px; text-align: left; color: #475569;">Jumlah</th>
-                    <th style="padding: 12px; text-align: left; color: #475569;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="cartTableBody">
-                @foreach($cartItems as $index => $item)
-                <tr style="border-bottom: 1px solid #e5e7eb;" id="row-{{ $item['id'] }}">
-                    <td style="padding: 15px;">{{ $loop->iteration }}</td>
-                    <td style="padding: 15px;">{{ $item['kode_barang'] }}</td>
-                    <td style="padding: 15px; font-weight: 500;">{{ $item['nama_barang'] }}</td>
-                    <td style="padding: 15px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <button class="btn-qty" data-action="decrement" data-id="{{ $item['id'] }}"
-                                    style="width: 30px; height: 30px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer;">
-                                -
-                            </button>
-                            
-                            <span id="qty-{{ $item['id'] }}" style="font-weight: 500;">
-                                {{ $item['jumlah'] }}
-                            </span>
-                            
-                            <button class="btn-qty" data-action="increment" data-id="{{ $item['id'] }}"
-                                    style="width: 30px; height: 30px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer;">
-                                +
-                            </button>
-                        </div>
-                        <small style="display: block; margin-top: 5px; color: #64748b;">
-                            Max: {{ $item['max_stok'] }}
-                        </small>
-                    </td>
-                    <td style="padding: 15px;">
-                        <button class="btn btn-danger btn-sm remove-item-btn" data-id="{{ $item['id'] }}">
-                            <i class="fas fa-trash"></i> Hapus
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    
-    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-        <h4>Total: <span id="totalItems">{{ count($cartItems) }}</span> barang</h4>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-shopping-cart text-blue-500"></i>
+                Keranjang Peminjaman
+            </h1>
+            <p class="text-gray-600 mt-1">Barang yang akan dipinjam</p>
+        </div>
         
-        <div style="display: flex; gap: 15px; margin-top: 20px;">
-            <a href="{{ route('borrowing.pinjam') }}" class="btn" style="background: #f1f5f9; color: #475569;">
-                <i class="fas fa-arrow-left"></i> Tambah Barang Lagi
+        @if(count($cartItems) > 0)
+        <div class="flex items-center gap-3">
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                {{ count($cartItems) }} item
+            </span>
+        </div>
+        @endif
+    </div>
+
+    @if(count($cartItems) > 0)
+    <!-- Table -->
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Barang</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Barang</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($cartItems as $index => $item)
+                    <tr id="row-{{ $item['id'] }}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ $item['kode_barang'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $item['nama_barang'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <div class="flex items-center gap-2">
+                                <button class="btn-qty" data-action="decrement" data-id="{{ $item['id'] }}"
+                                        class="w-8 h-8 border border-gray-300 bg-white rounded-lg hover:bg-gray-50 flex items-center justify-center">
+                                    -
+                                </button>
+                                
+                                <span id="qty-{{ $item['id'] }}" class="font-medium min-w-[20px] text-center">
+                                    {{ $item['jumlah'] }}
+                                </span>
+                                
+                                <button class="btn-qty" data-action="increment" data-id="{{ $item['id'] }}"
+                                        class="w-8 h-8 border border-gray-300 bg-white rounded-lg hover:bg-gray-50 flex items-center justify-center">
+                                    +
+                                </button>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                Max: {{ $item['max_stok'] }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <button class="remove-item-btn bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1 rounded-lg text-sm font-medium"
+                                    data-id="{{ $item['id'] }}">
+                                <i class="fas fa-trash mr-1"></i> Hapus
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{{ route('borrowing.pinjam') }}" 
+               class="inline-flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium">
+                <i class="fas fa-arrow-left"></i>
+                Tambah Barang Lagi
             </a>
             
-            <button id="clearCartBtn" class="btn btn-secondary">
-                <i class="fas fa-trash-alt"></i> Kosongkan Keranjang
+            <button id="clearCartBtn"
+                    class="inline-flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-medium">
+                <i class="fas fa-trash-alt"></i>
+                Kosongkan Keranjang
             </button>
             
-            <button id="submitPeminjamanBtn" class="btn btn-primary" style="margin-left: auto;">
-                <i class="fas fa-paper-plane"></i> Kirim Permintaan Peminjaman
+            <button id="submitPeminjamanBtn"
+                    class="inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium ml-auto">
+                <i class="fas fa-paper-plane"></i>
+                Kirim Permintaan Peminjaman
             </button>
         </div>
         
-        <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin-top: 20px; border-radius: 8px;">
-            <p style="margin: 0; color: #0369a1;">
-                <i class="fas fa-info-circle"></i> 
+        <!-- Info -->
+        <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p class="text-blue-700 text-sm">
+                <i class="fas fa-info-circle mr-2"></i>
                 <strong>Perhatian:</strong> Setelah mengirim permintaan, admin akan meninjau dan menyetujui peminjaman Anda. 
                 Status akan berubah dari <strong>Pending</strong> menjadi <strong>Dipinjam</strong> setelah disetujui.
             </p>
@@ -91,13 +113,18 @@
     </div>
     
     @else
-    <div style="text-align: center; padding: 40px;">
-        <i class="fas fa-shopping-cart" style="font-size: 60px; color: #cbd5e1;"></i>
-        <h3 style="margin-top: 20px; color: #64748b;">Keranjang Kosong</h3>
-        <p style="color: #94a3b8;">Belum ada barang yang ditambahkan ke keranjang</p>
+    <!-- Empty Cart -->
+    <div class="bg-white rounded-xl shadow p-8 text-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-shopping-cart text-3xl text-gray-400"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">Keranjang Kosong</h3>
+        <p class="text-gray-500 mb-6">Belum ada barang yang ditambahkan ke keranjang</p>
         
-        <a href="{{ route('borrowing.pinjam') }}" class="btn btn-primary" style="margin-top: 20px;">
-            <i class="fas fa-boxes"></i> Pinjam Barang
+        <a href="{{ route('borrowing.pinjam') }}" 
+           class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium">
+            <i class="fas fa-boxes"></i>
+            Pinjam Barang
         </a>
     </div>
     @endif
@@ -184,13 +211,11 @@ function removeItem(itemId) {
     .then(data => {
         if (data.success) {
             // Hapus row dari tabel
-            document.getElementById('row-' + itemId).remove();
+            const row = document.getElementById('row-' + itemId);
+            if (row) row.remove();
             
-            // Update total items
-            const remainingRows = document.querySelectorAll('#cartTableBody tr').length;
-            document.getElementById('totalItems').textContent = remainingRows;
-            
-            // Jika keranjang kosong, reload halaman
+            // Jika tidak ada row lagi, reload halaman
+            const remainingRows = document.querySelectorAll('tbody tr').length;
             if (remainingRows === 0) {
                 setTimeout(() => {
                     window.location.reload();
@@ -208,7 +233,6 @@ function removeItem(itemId) {
 function clearCart() {
     if (!confirm('Kosongkan seluruh keranjang? Semua barang akan dihapus.')) return;
     
-    // Redirect ke route clear cart
     window.location.href = '{{ route("borrowing.cart.clear") }}';
 }
 
@@ -216,7 +240,6 @@ function clearCart() {
 function submitPeminjaman() {
     if (!confirm('Kirim permintaan peminjaman? Setelah dikirim, tidak dapat diubah.')) return;
     
-    // Show loading
     const submitBtn = document.getElementById('submitPeminjamanBtn');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
@@ -253,5 +276,4 @@ function submitPeminjaman() {
     });
 }
 </script>
-
 @endsection

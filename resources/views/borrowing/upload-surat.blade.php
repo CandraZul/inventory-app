@@ -1,149 +1,171 @@
-@extends('borrowing.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Upload Surat Peminjaman')
-@section('page-title', 'Upload Surat Peminjaman')
 
 @section('content')
-
-<div class="card">
-    <div style="text-align: center; margin-bottom: 30px;">
-        <i class="fas fa-file-contract" style="font-size: 60px; color: #3b82f6;"></i>
-        <h2 style="margin-top: 15px;">Upload Surat Peminjaman</h2>
-        <p style="color: #64748b;">
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="text-center mb-6">
+        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-file-contract text-3xl text-blue-500"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Upload Surat Peminjaman</h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">
             Untuk peminjaman jangka panjang atau membawa barang keluar kampus
         </p>
         
-        <div style="margin-top: 20px;">
-            <a href="{{ route('borrowing.surat.template') }}" class="btn btn-success">
-                <i class="fas fa-download"></i> Unduh Template Surat (.docx)
+        <div class="flex flex-wrap gap-3 justify-center mt-4">
+            <a href="{{ route('borrowing.surat.template') . '?v=' . time() }}" 
+               class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-medium">
+                <i class="fas fa-download"></i>
+                Unduh Template Surat (.docx)
             </a>
-            <a href="{{ route('borrowing.surat.list') }}" class="btn" style="background: #f1f5f9; color: #475569; margin-left: 10px;">
-                <i class="fas fa-list"></i> Lihat Surat Saya
+            <a href="{{ route('borrowing.surat.list') }}" 
+               class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium">
+                <i class="fas fa-list"></i>
+                Lihat Surat Saya
             </a>
         </div>
     </div>
-    
+
     @if(session('success'))
-    <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i> {{ session('success') }}
+    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+            <p class="text-green-800 font-medium">{{ session('success') }}</p>
+        </div>
     </div>
     @endif
     
     @if(session('error'))
-    <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+            <p class="text-red-800 font-medium">{{ session('error') }}</p>
+        </div>
     </div>
     @endif
     
-    <form method="POST" action="{{ route('borrowing.surat.store') }}" enctype="multipart/form-data" id="uploadForm">
-        @csrf
-        
-        <div style="max-width: 600px; margin: 0 auto;">
+    <!-- Form -->
+    <div class="bg-white rounded-xl shadow p-6">
+        <form method="POST" action="{{ route('borrowing.surat.store') }}" enctype="multipart/form-data" id="uploadForm">
+            @csrf
             
-            <div style="background: #f0f9ff; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
-                <h4 style="margin-top: 0; color: #0369a1;">
-                    <i class="fas fa-info-circle"></i> Petunjuk Pengisian
+            <!-- Info Box -->
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-6">
+                <h4 class="font-medium text-blue-800 mb-2 flex items-center gap-2">
+                    <i class="fas fa-info-circle"></i>Petunjuk Pengisian
                 </h4>
-                <ol style="margin: 10px 0 0 20px; color: #475569;">
-                    <li>Unduh template surat di atas</li>
-                    <li>Isi data di template menggunakan Microsoft Word/LibreOffice</li>
-                    <li>Cetak dan tanda tangani surat</li>
-                    <li>Scan surat yang sudah ditandatangani menjadi PDF (atau foto jelas)</li>
-                    <li>Upload file PDF/Word di form bawah ini</li>
+                <ol class="text-blue-700 text-sm space-y-1 ml-4">
+                    <li>1. Unduh template surat di atas</li>
+                    <li>2. Isi data di template menggunakan Microsoft Word/LibreOffice</li>
+                    <li>3. Cetak dan tanda tangani surat</li>
+                    <li>4. Scan surat yang sudah ditandatangani menjadi PDF (atau foto jelas)</li>
+                    <li>5. Upload file PDF/Word di form bawah ini</li>
                 </ol>
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: #475569; font-weight: 500;">
-                    <i class="fas fa-user"></i> Nama Pemohon <span style="color: #ef4444;">*</span>
-                </label>
-                <input type="text" name="nama_pemohon" required 
-                       value="{{ Auth::user()->name }}"
-                       style="width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 8px;"
-                       placeholder="Nama lengkap sesuai KTM/KTP">
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: #475569; font-weight: 500;">
-                    <i class="fas fa-phone"></i> Nomor HP/WhatsApp <span style="color: #ef4444;">*</span>
-                </label>
-                <input type="tel" name="no_hp" required 
-                       style="width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 8px;"
-                       placeholder="Contoh: 081234567890">
-                <small style="display: block; margin-top: 5px; color: #64748b;">
-                    Akan digunakan untuk konfirmasi dari admin
-                </small>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: #475569; font-weight: 500;">
-                    <i class="fas fa-calendar-alt"></i> Periode Peminjaman <span style="color: #ef4444;">*</span>
-                </label>
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                    <div style="flex: 1;">
-                        <label style="font-size: 14px; color: #64748b;">Dari Tanggal</label>
-                        <input type="date" name="tanggal_mulai" required 
-                               min="{{ date('Y-m-d') }}"
-                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+            <div class="max-w-2xl mx-auto space-y-4">
+                <!-- Nama Pemohon -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-user mr-2"></i>Nama Pemohon <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nama_pemohon" required 
+                           value="{{ Auth::user()->name }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Nama lengkap sesuai KTM/KTP">
+                </div>
+                
+                <!-- Nomor HP -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-phone mr-2"></i>Nomor HP/WhatsApp <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" name="no_hp" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Contoh: 081234567890">
+                    <p class="text-xs text-gray-500 mt-1">
+                        Akan digunakan untuk konfirmasi dari admin
+                    </p>
+                </div>
+                
+                <!-- Periode Peminjaman -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-calendar-alt mr-2"></i>Periode Peminjaman <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Dari Tanggal</label>
+                            <input type="date" name="tanggal_mulai" required 
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Sampai Tanggal</label>
+                            <input type="date" name="tanggal_selesai" required 
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 14px; color: #64748b;">Sampai Tanggal</label>
-                        <input type="date" name="tanggal_selesai" required 
-                               min="{{ date('Y-m-d') }}"
-                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                </div>
+                
+                <!-- Keperluan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-file-alt mr-2"></i>Keperluan Peminjaman
+                    </label>
+                    <textarea name="keperluan" rows="3"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="Contoh: Untuk penelitian tugas akhir, seminar fakultas, praktikum lapangan, dll."></textarea>
+                </div>
+                
+                <!-- Upload File -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-file-upload mr-2"></i>Upload Surat <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <div class="border-2 border-dashed border-blue-400 rounded-xl p-8 text-center bg-blue-50 hover:bg-blue-100 cursor-pointer transition"
+                         onclick="document.getElementById('fileInput').click()"
+                         id="dropZone">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-blue-500 mb-3"></i>
+                        <p class="text-gray-700 font-medium mb-1">
+                            Klik untuk memilih file atau drag file ke sini
+                        </p>
+                        <p class="text-gray-500 text-sm">
+                            Format: PDF, DOC, DOCX (maksimal 5MB)
+                        </p>
+                    </div>
+                    
+                    <input type="file" name="surat" id="fileInput" accept=".pdf,.doc,.docx" required 
+                           class="hidden" onchange="showFileName(this)">
+                    
+                    <div id="fileName" class="mt-3 hidden">
+                        <p class="text-green-600 text-sm flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i>
+                            File terpilih: <span id="fileNameText" class="font-medium"></span>
+                        </p>
                     </div>
                 </div>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: #475569; font-weight: 500;">
-                    <i class="fas fa-file-alt"></i> Keperluan Peminjaman
-                </label>
-                <textarea name="keperluan" rows="3"
-                          style="width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 8px;"
-                          placeholder="Contoh: Untuk penelitian tugas akhir, seminar fakultas, praktikum lapangan, dll."></textarea>
-            </div>
-            
-            <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 8px; color: #475569; font-weight: 500;">
-                    <i class="fas fa-file-upload"></i> Upload Surat <span style="color: #ef4444;">*</span>
-                </label>
                 
-                <div style="border: 2px dashed #3b82f6; border-radius: 10px; padding: 30px; text-align: center; background: #f8fafc; cursor: pointer;"
-                     onclick="document.getElementById('fileInput').click()"
-                     id="dropZone">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #3b82f6;"></i>
-                    <p style="margin: 15px 0 10px 0; color: #475569;">
-                        <strong>Klik untuk memilih file atau drag file ke sini</strong>
-                    </p>
-                    <p style="color: #64748b; font-size: 14px;">
-                        Format: PDF, DOC, DOCX (maksimal 5MB)
-                    </p>
-                </div>
-                
-                <input type="file" name="surat" id="fileInput" accept=".pdf,.doc,.docx" required 
-                       style="display: none;" onchange="showFileName(this)">
-                
-                <div id="fileName" style="margin-top: 10px; display: none;">
-                    <p style="margin: 0; color: #059669;">
-                        <i class="fas fa-check-circle"></i> 
-                        File terpilih: <span id="fileNameText"></span>
-                    </p>
+                <!-- Action Buttons -->
+                <div class="flex gap-3 justify-center pt-6">
+                    <a href="{{ route('borrowing.dashboard') }}" 
+                       class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium">
+                        <i class="fas fa-arrow-left"></i>
+                        Kembali
+                    </a>
+                    <button type="submit" id="submitBtn" 
+                            class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium">
+                        <i class="fas fa-paper-plane"></i>
+                        Kirim Surat
+                    </button>
                 </div>
             </div>
-            
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 30px;">
-                <a href="{{ route('borrowing.dashboard') }}" class="btn" 
-                   style="background: #f1f5f9; color: #475569; padding: 12px 25px;">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
-                <button type="submit" class="btn btn-primary" id="submitBtn" style="padding: 12px 25px;">
-                    <i class="fas fa-paper-plane"></i> Kirim Surat
-                </button>
-            </div>
-            
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -155,13 +177,13 @@ function showFileName(input) {
         
         document.getElementById('fileNameText').textContent = 
             `${fileName} (${fileSize} MB)`;
-        document.getElementById('fileName').style.display = 'block';
+        document.getElementById('fileName').classList.remove('hidden');
         
         // Validasi ukuran file
         if (input.files[0].size > 5 * 1024 * 1024) { // 5MB
             alert('Ukuran file terlalu besar! Maksimal 5MB.');
             input.value = '';
-            document.getElementById('fileName').style.display = 'none';
+            document.getElementById('fileName').classList.add('hidden');
         }
     }
 }
@@ -172,20 +194,20 @@ const fileInput = document.getElementById('fileInput');
 
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
-    dropZone.style.background = '#e0f2fe';
-    dropZone.style.borderColor = '#1d4ed8';
+    dropZone.classList.add('bg-blue-100');
+    dropZone.classList.add('border-blue-500');
 });
 
 dropZone.addEventListener('dragleave', (e) => {
     e.preventDefault();
-    dropZone.style.background = '#f8fafc';
-    dropZone.style.borderColor = '#3b82f6';
+    dropZone.classList.remove('bg-blue-100');
+    dropZone.classList.remove('border-blue-500');
 });
 
 dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    dropZone.style.background = '#f8fafc';
-    dropZone.style.borderColor = '#3b82f6';
+    dropZone.classList.remove('bg-blue-100');
+    dropZone.classList.remove('border-blue-500');
     
     if (e.dataTransfer.files.length) {
         fileInput.files = e.dataTransfer.files;
@@ -218,13 +240,19 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
         submitBtn.disabled = false;
     }, 10000);
 });
+
+// Force template cache busting on click
+document.addEventListener('DOMContentLoaded', function() {
+    const templateLink = document.querySelector('a[href*="template"]');
+    if (templateLink) {
+        templateLink.addEventListener('click', function(e) {
+            // Tambah timestamp ke URL
+            const originalHref = this.getAttribute('href');
+            if (!originalHref.includes('?')) {
+                this.setAttribute('href', originalHref + '?v=' + Date.now());
+            }
+        });
+    }
+});
 </script>
-
-<style>
-#dropZone:hover {
-    background: #f0f9ff !important;
-    border-color: #1d4ed8 !important;
-}
-</style>
-
 @endsection
