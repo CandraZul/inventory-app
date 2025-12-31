@@ -173,7 +173,7 @@
                                     <i id="surat-arrow" class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
                                 @endif
                             </button>
-                            
+
                             @if(!session('sidebar_collapsed'))
                                 <!-- Submenu Surat -->
                                 <div id="surat-submenu" class="ml-10 space-y-1 mt-1 {{ request()->routeIs('borrowing.surat.*') ? '' : 'hidden' }}">
