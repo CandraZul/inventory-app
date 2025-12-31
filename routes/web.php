@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterMahasiswaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\User\PeminjamanUserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -13,9 +14,14 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::redirect('/home', '/');
+
+// tak matiin dulu ya
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -56,3 +62,22 @@ Route::post('/inventory', [InventoryController::class, 'store'])->name('inventor
 Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
 Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
 Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+
+
+Route::middleware(['auth'])->prefix('borrowing')->group(function () {
+
+    // dashboard user peminjaman
+    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
+        ->name('borrowing.dashboard');
+
+    // halaman pinjam barang
+    Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
+        ->name('borrowing.pinjam');
+    Route::post('/pinjam', [PeminjamanUserController::class, 'store'])
+    ->name('borrowing.store');
+
+    // riwayat peminjaman
+    Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
+        ->name('borrowing.riwayat');
+});
+

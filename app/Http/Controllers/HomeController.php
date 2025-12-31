@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Inventory;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $stats = [
+            'total_items' => Inventory::sum('jumlah') // atau count()
+        ];
+
+        return view('home', compact('stats'));
     }
 }

@@ -7,10 +7,6 @@
     <div class="grid grid-cols-1 gap-8">
         <!-- Header -->
         <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Tambah Inventory</h1>
-                <p class="text-gray-600">Tambahkan barang baru ke sistem inventori TIK</p>
-            </div>
             <a href="{{ route('inventory.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-3 rounded-lg font-medium flex items-center">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Kembali
