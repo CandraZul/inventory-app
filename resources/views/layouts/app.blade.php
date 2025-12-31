@@ -175,17 +175,6 @@
                     </div>
                     @endhasanyrole
 
-                    <!-- ========== MENU MAHASISWA ONLY ========== -->
-                    @role('mahasiswa')
-                    <a href="{{ route('borrowing.submit') }}"
-                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.submit') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                        <i class="fas fa-paper-plane w-5 text-center text-gray-500"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Kirim Pengajuan</span>
-                        @endif
-                    </a>
-                    @endrole
-
                     <!-- ========== MENU DOSEN ONLY ========== -->
                     @role('dosen')
                     <a href="{{ route('borrowing.reports') }}"
