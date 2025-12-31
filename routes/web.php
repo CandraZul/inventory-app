@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\User\SuratController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\User\PeminjamanUserController;
 use Illuminate\Support\Facades\Auth;
@@ -63,21 +64,64 @@ Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('
 Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
 Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 
-
-Route::middleware(['auth'])->prefix('borrowing')->group(function () {
-
-    // dashboard user peminjaman
+// ========== PERBAIKAN ROUTE BORROWING ==========
+Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(function () {
+    
+    // Dashboard
     Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
-        ->name('borrowing.dashboard');
-
-    // halaman pinjam barang
+        ->name('dashboard');
+    
+    // Halaman pinjam barang
     Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
-        ->name('borrowing.pinjam');
-    Route::post('/pinjam', [PeminjamanUserController::class, 'store'])
-    ->name('borrowing.store');
+        ->name('pinjam');
+    
+    // Keranjang routes
+    Route::post('/cart/add', [PeminjamanUserController::class, 'addToCart'])
+        ->name('cart.add');
+    
+    Route::get('/cart', [PeminjamanUserController::class, 'viewCart'])
+        ->name('cart');
+    
+    Route::post('/cart/update', [PeminjamanUserController::class, 'updateCart'])
+        ->name('cart.update');
+    
+    Route::post('/cart/remove', [PeminjamanUserController::class, 'removeFromCart'])
+        ->name('cart.remove');
 
-    // riwayat peminjaman
+    Route::get('/cart/clear', [PeminjamanUserController::class, 'clearCart'])
+        ->name('cart.clear');
+    
+    Route::post('/submit', [PeminjamanUserController::class, 'submitPeminjaman'])
+        ->name('submit');
+    
+    // Riwayat
     Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
-        ->name('borrowing.riwayat');
+        ->name('riwayat');
 });
 
+// ========== PERBAIKAN ROUTE SURAT ==========
+Route::middleware(['auth'])->prefix('surat')->name('borrowing.surat.')->group(function () {
+    Route::get('/upload', [SuratController::class, 'create'])
+        ->name('upload');
+    
+    Route::post('/upload', [SuratController::class, 'store'])
+        ->name('store');
+    
+    Route::get('/template', [SuratController::class, 'downloadTemplate'])
+        ->name('template');
+    
+    // ROUTE INI UNTUK MENU SIDEBAR
+    Route::get('/list', [SuratController::class, 'index'])
+        ->name('list');
+
+    // Tambah route untuk cancel surat (perbaiki prefix)
+    Route::delete('/{id}/cancel', [SuratController::class, 'cancel'])
+        ->name('cancel');
+});
+
+
+// Tambahkan route logout jika belum ada
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
