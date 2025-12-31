@@ -57,154 +57,154 @@
             <!-- Navigation -->
             <div class="flex flex-col flex-1 px-3 py-6 overflow-y-auto sidebar-scrollbar">
                 <nav class="space-y-1">
-                    <!-- ========== MENU ADMIN ========== -->
-                    @if($isAdmin)
-                        <!-- Dashboard Admin -->
-                        <a href="{{ route('dashboard') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-tachometer-alt w-5 text-center {{ request()->routeIs('dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Dashboard</span>
-                            @endif
-                        </a>
 
-                        <!-- Inventori -->
-                        <a href="{{ route('inventory.index') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('inventory.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-boxes w-5 text-center {{ request()->routeIs('inventory.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Inventori</span>
-                            @endif
-                        </a>
+                    <!-- ========== MENU SUPER ADMIN & ADMIN (APPROVAL) ========== -->
+                    @hasanyrole('admin|super admin')
+                    <!-- Dashboard -->
+                    <a href="{{ route('dashboard') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
+              {{ request()->routeIs('dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-tachometer-alt w-5 text-center
+                 {{ request()->routeIs('dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Dashboard</span>
+                        @endif
+                    </a>
 
-                        <!-- Manajemen Peminjaman -->
-                        <a href="{{ route('admin.borrowing.index') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('admin.borrowing.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-handshake w-5 text-center {{ request()->routeIs('admin.borrowing.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Kelola Peminjaman</span>
-                            @endif
-                        </a>
+                    <!-- Inventori -->
+                    <a href="{{ route('inventory.index') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
+              {{ request()->routeIs('inventory.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-boxes w-5 text-center
+                 {{ request()->routeIs('inventory.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Inventori</span>
+                        @endif
+                    </a>
 
-                        <!-- Pengembalian -->
-                        <a href="{{ route('admin.returns') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('admin.returns.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-undo-alt w-5 text-center {{ request()->routeIs('admin.returns.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Pengembalian</span>
-                            @endif
-                        </a>
+                    <!-- Manajemen User -->
+                    <a href="{{ route('users.index') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
+              {{ request()->routeIs('users.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-users w-5 text-center
+                 {{ request()->routeIs('users.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Pengguna</span>
+                        @endif
+                    </a>
 
-                        <!-- Laporan -->
-                        <a href="{{ route('admin.reports') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('admin.reports.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-chart-bar w-5 text-center {{ request()->routeIs('admin.reports.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Laporan</span>
-                            @endif
-                        </a>
+                    <!-- Approval Pengajuan Peminjaman -->
+                    <a href="{{ route('approval.peminjaman.index') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
+              {{ request()->routeIs('approval.peminjaman.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-clipboard-check w-5 text-center
+                 {{ request()->routeIs('approval.peminjaman.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Approval Peminjaman</span>
+                        @endif
+                    </a>
+                    @endhasanyrole
 
-                        <!-- Manajemen User -->
-                        <a href="{{ route('users.index') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('users.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-users w-5 text-center {{ request()->routeIs('users.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Pengguna</span>
-                            @endif
-                        </a>
+                    <!-- ========== MENU DOSEN & MAHASISWA (UI SAMA) ========== -->
+                    @hasanyrole('dosen|mahasiswa')
+                    <a href="{{ route('borrowing.dashboard') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-home w-5 text-center {{ request()->routeIs('borrowing.dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Beranda</span>
+                        @endif
+                    </a>
 
-                    <!-- ========== MENU USER (PEMINJAM) ========== -->
-                    @else
-                        <!-- Dashboard User -->
-                        <a href="{{ route('borrowing.dashboard') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-home w-5 text-center {{ request()->routeIs('borrowing.dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Beranda</span>
-                            @endif
-                        </a>
+                    <a href="{{ route('borrowing.pinjam') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.pinjam') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-cart-plus w-5 text-center {{ request()->routeIs('borrowing.pinjam') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Pinjam Barang</span>
+                        @endif
+                    </a>
 
-                        <!-- Pinjam Barang -->
-                        <a href="{{ route('borrowing.pinjam') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.pinjam') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-cart-plus w-5 text-center {{ request()->routeIs('borrowing.pinjam') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Pinjam Barang</span>
-                                @php
-                                    $cartCount = count(session()->get('borrowing_cart', []));
-                                @endphp
-                                @if($cartCount > 0)
-                                    <span class="ml-auto bg-red-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                                        {{ $cartCount }}
-                                    </span>
-                                @endif
-                            @endif
-                        </a>
+                    <a href="{{ route('borrowing.cart') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.cart') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-shopping-cart w-5 text-center {{ request()->routeIs('borrowing.cart') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Keranjang Saya</span>
+                        @endif
+                    </a>
 
-                        <!-- Keranjang -->
-                        <a href="{{ route('borrowing.cart') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.cart') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-shopping-cart w-5 text-center {{ request()->routeIs('borrowing.cart') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Keranjang Saya</span>
-                            @endif
-                        </a>
+                    <a href="{{ route('borrowing.riwayat') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.riwayat') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-history w-5 text-center {{ request()->routeIs('borrowing.riwayat') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Riwayat Saya</span>
+                        @endif
+                    </a>
 
-                        <!-- Riwayat Peminjaman -->
-                        <a href="{{ route('borrowing.riwayat') }}"
-                           class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.riwayat') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                            <i class="fas fa-history w-5 text-center {{ request()->routeIs('borrowing.riwayat') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Riwayat Saya</span>
-                            @endif
-                        </a>
-
-                        <!-- Surat Saya -->
-                        <div class="space-y-1">
-                            <button type="button" onclick="toggleSuratMenu()"
-                               class="sidebar-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.surat.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('borrowing.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                                    @if(!session('sidebar_collapsed'))
-                                        <span class="ml-3 font-medium">Surat Saya</span>
-                                    @endif
-                                </div>
+                    <!-- Surat Saya -->
+                    <div class="space-y-1">
+                        <button type="button" onclick="toggleSuratMenu()"
+                                class="sidebar-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.surat.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('borrowing.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                                 @if(!session('sidebar_collapsed'))
-                                    <i id="surat-arrow" class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
+                                    <span class="ml-3 font-medium">Surat Saya</span>
                                 @endif
-                            </button>
-
+                            </div>
                             @if(!session('sidebar_collapsed'))
-                                <!-- Submenu Surat -->
-                                <div id="surat-submenu" class="ml-10 space-y-1 mt-1 {{ request()->routeIs('borrowing.surat.*') ? '' : 'hidden' }}">
-                                    <a href="{{ route('borrowing.surat.upload') }}"
-                                       class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.upload') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <i class="fas fa-upload w-4 text-center mr-2"></i>
-                                        Upload Surat
-                                    </a>
-                                    <a href="{{ route('borrowing.surat.list') }}"
-                                       class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.list') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <i class="fas fa-list w-4 text-center mr-2"></i>
-                                        Daftar Surat
-                                    </a>
-                                    <a href="{{ route('borrowing.surat.template') }}"
-                                       class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.template') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <i class="fas fa-download w-4 text-center mr-2"></i>
-                                        Template Surat
-                                    </a>
-                                </div>
+                                <i id="surat-arrow"
+                                   class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
                             @endif
-                        </div>
-                    @endif
+                        </button>
 
-                    <!-- Separator -->
+                        @if(!session('sidebar_collapsed'))
+                            <div id="surat-submenu"
+                                 class="ml-10 space-y-1 mt-1 {{ request()->routeIs('borrowing.surat.*') ? '' : 'hidden' }}">
+                                <a href="{{ route('borrowing.surat.upload') }}"
+                                   class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.upload') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
+                                    <i class="fas fa-upload w-4 text-center mr-2"></i> Upload Surat
+                                </a>
+                                <a href="{{ route('borrowing.surat.list') }}"
+                                   class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.list') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
+                                    <i class="fas fa-list w-4 text-center mr-2"></i> Daftar Surat
+                                </a>
+                                <a href="{{ route('borrowing.surat.template') }}"
+                                   class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.template') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
+                                    <i class="fas fa-download w-4 text-center mr-2"></i> Template Surat
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                    @endhasanyrole
+
+                    <!-- ========== MENU MAHASISWA ONLY ========== -->
+                    @role('mahasiswa')
+                    <a href="{{ route('borrowing.submit') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.submit') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-paper-plane w-5 text-center text-gray-500"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Kirim Pengajuan</span>
+                        @endif
+                    </a>
+                    @endrole
+
+                    <!-- ========== MENU DOSEN ONLY ========== -->
+                    @role('dosen')
+                    <a href="{{ route('borrowing.reports') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.reports') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-chalkboard-teacher w-5 text-center text-gray-500"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Lihat Laporan Kelas</span>
+                        @endif
+                    </a>
+                    @endrole
+
+                    <!-- Separator tetap dipertahankan -->
                     <div class="pt-4">
                         <div class="{{ !session('sidebar_collapsed') ? 'px-3' : '' }}">
                             <div class="border-t border-gray-200"></div>
                         </div>
                     </div>
 
-                    <!-- Profil -->
+                    <!-- Profil (tidak dibatasi role, tetap muncul semua user login) -->
                     <a href="{{ route('profile') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('profile') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-user w-5 text-center {{ request()->routeIs('profile') ? 'text-accent-600' : 'text-gray-500' }}"></i>
@@ -213,7 +213,7 @@
                         @endif
                     </a>
 
-                    <!-- Logout -->
+                    <!-- Logout (tidak diubah, tetap dipertahankan) -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
@@ -224,7 +224,9 @@
                             @endif
                         </button>
                     </form>
+
                 </nav>
+
             </div>
         </aside>
 
@@ -243,7 +245,8 @@
                         <nav class="flex" aria-label="Breadcrumb">
                             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                                 <li class="inline-flex items-center">
-                                    <a href="{{ $dashboardRoute }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                                    <a href="{{ $dashboardRoute }}"
+                                       class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
                                         <i class="fas fa-home mr-2"></i>
                                         {{ $dashboardName }}
                                     </a>
@@ -295,25 +298,27 @@
                 <!-- Right: Notifications & Profile -->
                 <div class="flex items-center space-x-4">
                     @if($isUser)
-                    <!-- Cart Indicator for User -->
-                    @php
-                        $cartCount = count(session()->get('borrowing_cart', []));
-                    @endphp
-                    <div class="relative">
-                        <a href="{{ route('borrowing.cart') }}" class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 relative">
-                            <i class="fas fa-shopping-cart text-lg"></i>
-                            @if($cartCount > 0)
-                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                        <!-- Cart Indicator for User -->
+                        @php
+                            $cartCount = count(session()->get('borrowing_cart', []));
+                        @endphp
+                        <div class="relative">
+                            <a href="{{ route('borrowing.cart') }}"
+                               class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 relative">
+                                <i class="fas fa-shopping-cart text-lg"></i>
+                                @if($cartCount > 0)
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                                     {{ $cartCount }}
                                 </span>
-                            @endif
-                        </a>
-                    </div>
+                                @endif
+                            </a>
+                        </div>
                     @endif
 
                     <!-- Profile Dropdown -->
                     <div class="relative">
-                        <button id="profile-button" class="flex items-center space-x-3 p-1.5 rounded-lg hover:bg-gray-100">
+                        <button id="profile-button"
+                                class="flex items-center space-x-3 p-1.5 rounded-lg hover:bg-gray-100">
                             <div class="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center text-accent-600 font-semibold">
                                 {{ substr(Auth::user()->name, 0, 1) }}
                             </div>
@@ -336,11 +341,11 @@
                                     Profil Saya
                                 </a>
                                 @if($isAdmin)
-                                <a href="#"
-                                   class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-cog mr-3 text-gray-500"></i>
-                                    Pengaturan Admin
-                                </a>
+                                    <a href="#"
+                                       class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-cog mr-3 text-gray-500"></i>
+                                        Pengaturan Admin
+                                    </a>
                                 @endif
                                 <div class="border-t border-gray-200 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">

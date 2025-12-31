@@ -10,6 +10,9 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\User\PeminjamanUserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PeminjamanApprovalController;
+
+
 
 Route::get('/', function () {
     return view('dashboard');
@@ -66,34 +69,34 @@ Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name(
 
 //User Interface (Side Pengguna)
 Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(function () {
-    
+
     //Dashboard
     Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
         ->name('dashboard');
-    
-    //Halaman pinjam 
+
+    //Halaman pinjam
     Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
         ->name('pinjam');
-    
-    //Keranjang 
+
+    //Keranjang
     Route::post('/cart/add', [PeminjamanUserController::class, 'addToCart'])
         ->name('cart.add');
-    
+
     Route::get('/cart', [PeminjamanUserController::class, 'viewCart'])
         ->name('cart');
-    
+
     Route::post('/cart/update', [PeminjamanUserController::class, 'updateCart'])
         ->name('cart.update');
-    
+
     Route::post('/cart/remove', [PeminjamanUserController::class, 'removeFromCart'])
         ->name('cart.remove');
 
     Route::get('/cart/clear', [PeminjamanUserController::class, 'clearCart'])
         ->name('cart.clear');
-    
+
     Route::post('/submit', [PeminjamanUserController::class, 'submitPeminjaman'])
         ->name('submit');
-    
+
     //Riwayat
     Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
         ->name('riwayat');
@@ -102,13 +105,13 @@ Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(func
 Route::middleware(['auth'])->prefix('surat')->name('borrowing.surat.')->group(function () {
     Route::get('/upload', [SuratController::class, 'create'])
         ->name('upload');
-    
+
     Route::post('/upload', [SuratController::class, 'store'])
         ->name('store');
-    
+
     Route::get('/template', [SuratController::class, 'downloadTemplate'])
         ->name('template');
-    
+
     Route::get('/list', [SuratController::class, 'index'])
         ->name('list');
 
@@ -123,3 +126,14 @@ Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');
 })->name('logout');
+
+Route::middleware(['auth', 'role:admin|super admin'])->prefix('approval')->name('approval.')->group(function () {
+    Route::get('/peminjaman', [PeminjamanApprovalController::class, 'index'])
+        ->name('peminjaman.index');
+
+    Route::put('/peminjaman/{id}/approve', [PeminjamanApprovalController::class, 'approve'])
+        ->name('peminjaman.approve');
+
+    Route::put('/peminjaman/{id}/reject', [PeminjamanApprovalController::class, 'reject'])
+        ->name('peminjaman.reject');
+});
