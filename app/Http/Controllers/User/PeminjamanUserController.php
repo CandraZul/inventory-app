@@ -6,89 +6,296 @@ use App\Http\Controllers\Controller;
 use App\Models\Inventory;
 use App\Models\Peminjaman;
 use App\Models\PeminjamanDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PeminjamanUserController extends Controller
 {
-    /**
-     * Dashboard user borrowing
-     */
     public function dashboard()
     {
-        return view('borrowing.dashboard');
+        $user = Auth::user();
+        
+        // Hitung statistik
+        $totalPinjam = Peminjaman::where('user_id', $user->id)->count();
+        $sedangDipinjam = Peminjaman::where('user_id', $user->id)
+            ->where('status', 'dipinjam')
+            ->count();
+        $pending = Peminjaman::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->count();
+        
+        // Total users (contoh, bisa diambil dari model User)
+        $totalUsers = \App\Models\User::count();
+        
+        // Aktivitas terbaru
+        $recentActivities = Peminjaman::with('details.inventory')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        return view('borrowing.dashboard', compact(
+            'totalPinjam', 
+            'sedangDipinjam', 
+            'pending', 
+            'totalUsers',
+            'recentActivities'
+        ));
     }
 
-    /**
-     * Halaman pilih barang untuk dipinjam
-     */
     public function index(Request $request)
     {
-        $query = Inventory::query();
-
+        $query = Inventory::where('jumlah', '>', 0); // Hanya barang yang ada stok
+        
         if ($request->search) {
             $query->where('nama_barang', 'like', '%' . $request->search . '%');
         }
-
-        $inventories = $query->get();
-
-        return view('borrowing.pinjam', compact('inventories'));
+        
+        $inventories = $query->paginate(10);
+        
+        // Ambil data keranjang dari session
+        $cart = session()->get('borrowing_cart', []);
+        $cartCount = count($cart);
+        
+        return view('borrowing.pinjam', compact('inventories', 'cartCount'));
     }
-
+    
     /**
-     * Simpan data peminjaman
+     * Tambah barang ke keranjang (session)
      */
-    public function store(Request $request)
+    public function addToCart(Request $request)
     {
         $request->validate([
             'inventory_id' => 'required|exists:inventories,id',
             'jumlah' => 'required|integer|min:1',
         ]);
-
-        $user = Auth::user();
+        
         $inventory = Inventory::findOrFail($request->inventory_id);
-
+        
+        // Cek stok
         if ($request->jumlah > $inventory->jumlah) {
-            return back()->with('error', 'Stok tidak mencukupi');
+            return response()->json([
+                'success' => false,
+                'message' => 'Stok tidak mencukupi. Stok tersedia: ' . $inventory->jumlah
+            ]);
         }
-
-        // 1️⃣ simpan HEADER peminjaman
-        $peminjaman = Peminjaman::create([
-            'user_id' => $user->id,
-            'nim' => $user->nim ?? null,
-            'nip' => $user->nip ?? null,
-            'tanggal_pinjam' => now(),
-            'status' => 'dipinjam',
+        
+        // Ambil cart dari session
+        $cart = session()->get('borrowing_cart', []);
+        
+        // Cek apakah barang sudah ada di cart
+        $existingIndex = null;
+        foreach ($cart as $index => $item) {
+            if ($item['inventory_id'] == $request->inventory_id) {
+                $existingIndex = $index;
+                break;
+            }
+        }
+        
+        if ($existingIndex !== null) {
+            // Update jumlah jika sudah ada
+            $newJumlah = $cart[$existingIndex]['jumlah'] + $request->jumlah;
+            
+            // Cek lagi stok total
+            if ($newJumlah > $inventory->jumlah) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Total jumlah melebihi stok. Stok tersedia: ' . $inventory->jumlah
+                ]);
+            }
+            
+            $cart[$existingIndex]['jumlah'] = $newJumlah;
+        } else {
+            // Tambah baru ke cart
+            $cart[] = [
+                'inventory_id' => $inventory->id,
+                'nama_barang' => $inventory->nama_barang,
+                'jumlah' => $request->jumlah,
+                'max_stok' => $inventory->jumlah,
+                'added_at' => now()
+            ];
+        }
+        
+        // Simpan ke session
+        session(['borrowing_cart' => $cart]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Barang ditambahkan ke keranjang',
+            'cart_count' => count($cart)
         ]);
-
-        // 2️⃣ simpan DETAIL peminjaman
-        PeminjamanDetail::create([
-            'peminjaman_id' => $peminjaman->id,
-            'inventory_id' => $inventory->id,
-            'jumlah' => $request->jumlah,
+    }
+    
+    /**
+     * Tampilkan isi keranjang
+     */
+    public function viewCart()
+    {
+        $cart = session()->get('borrowing_cart', []);
+        
+        $cartItems = [];
+        foreach ($cart as $item) {
+            $inventory = Inventory::find($item['inventory_id']);
+            if ($inventory) {
+                $cartItems[] = [
+                    'id' => $item['inventory_id'],
+                    'nama_barang' => $inventory->nama_barang,
+                    'jumlah' => $item['jumlah'],
+                    'max_stok' => $inventory->jumlah,
+                    'kode_barang' => $inventory->kode_barang ?? 'BAR-' . $inventory->id
+                ];
+            }
+        }
+        
+        return view('borrowing.cart', compact('cartItems'));
+    }
+    
+    /**
+     * Update item di keranjang
+     */
+    public function updateCart(Request $request)
+    {
+        $cart = session()->get('borrowing_cart', []);
+        
+        foreach ($cart as $index => $item) {
+            if ($item['inventory_id'] == $request->inventory_id) {
+                if ($request->action == 'increment') {
+                    $cart[$index]['jumlah'] += 1;
+                } elseif ($request->action == 'decrement' && $cart[$index]['jumlah'] > 1) {
+                    $cart[$index]['jumlah'] -= 1;
+                } elseif ($request->action == 'remove') {
+                    unset($cart[$index]);
+                    $cart = array_values($cart); // Reset array keys
+                }
+                break;
+            }
+        }
+        
+        session(['borrowing_cart' => $cart]);
+        
+        return response()->json([
+            'success' => true,
+            'cart_count' => count($cart)
         ]);
+    }
+    
+    /**
+     * Kosongkan keranjang
+     */
+    public function clearCart()
+    {
+        session()->forget('borrowing_cart');
+        
+        return redirect()->route('borrowing.cart')
+            ->with('success', 'Keranjang berhasil dikosongkan');
+    }
 
-        // 3️⃣ kurangi stok
-        $inventory->decrement('jumlah', $request->jumlah);
-
-        return back()->with('success', 'Barang berhasil dipinjam');
+    /**
+     * Submit peminjaman dari keranjang
+     */
+    public function submitPeminjaman(Request $request)
+    {
+        $user = Auth::user();
+        $cart = session()->get('borrowing_cart', []);
+        
+        if (empty($cart)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Keranjang kosong'
+            ], 400);
+        }
+        
+        // Validasi stok sebelum submit
+        foreach ($cart as $item) {
+            $inventory = Inventory::find($item['inventory_id']);
+            if (!$inventory || $item['jumlah'] > $inventory->jumlah) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stok ' . ($inventory->nama_barang ?? 'barang') . ' tidak mencukupi'
+                ], 400);
+            }
+        }
+        
+        try {
+            // Buat peminjaman
+            $peminjaman = Peminjaman::create([
+                'user_id' => $user->id,
+                'status' => 'pending',
+                'tanggal_pinjam' => now(),
+                'tanggal_kembali' => null
+            ]);
+            
+            // Simpan detail peminjaman
+            foreach ($cart as $item) {
+                PeminjamanDetail::create([
+                    'peminjaman_id' => $peminjaman->id,
+                    'inventory_id' => $item['inventory_id'],
+                    'jumlah' => $item['jumlah']
+                ]);
+                
+                // Kurangi stok
+                $inventory = Inventory::find($item['inventory_id']);
+                $inventory->decrement('jumlah', $item['jumlah']);
+            }
+            
+            // Kosongkan keranjang
+            session()->forget('borrowing_cart');
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Permintaan peminjaman berhasil dikirim. Menunggu persetujuan admin.',
+                'peminjaman_id' => $peminjaman->id
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Hapus item dari keranjang
+     */
+    public function removeFromCart(Request $request)
+    {
+        $cart = session()->get('borrowing_cart', []);
+        
+        // Filter out the item to remove
+        $cart = array_filter($cart, function($item) use ($request) {
+            return $item['inventory_id'] != $request->inventory_id;
+        });
+        
+        // Reset array keys
+        $cart = array_values($cart);
+        
+        session(['borrowing_cart' => $cart]);
+        
+        return response()->json([
+            'success' => true,
+            'cart_count' => count($cart)
+        ]);
     }
 
     public function riwayat(Request $request)
     {
         $user = Auth::user();
-
-        // ambil semua peminjaman user ini, optional filter status
-    $query = Peminjaman::with('details.inventory')
-        ->where('user_id', $user->id);
-
-    if ($request->status) {
-        $query->where('status', $request->status);
+        
+        // Query peminjaman dengan eager loading
+        $query = Peminjaman::with(['details.inventory'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc');
+        
+        // Filter by status jika ada
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        
+        // Paginate result
+        $riwayat = $query->paginate(10)->withQueryString();
+        
+        return view('borrowing.riwayat', compact('riwayat'));
     }
-
-    $riwayat = $query->orderBy('tanggal_pinjam', 'desc')->get();
-
-    return view('borrowing.riwayat', compact('riwayat'));
-}
-
 }
