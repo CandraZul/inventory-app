@@ -17,29 +17,28 @@ class PeminjamanUserController extends Controller
         $user = Auth::user();
         
         // Hitung statistik
-        $totalPinjam = Peminjaman::where('user_id', $user->id)->count();
         $sedangDipinjam = Peminjaman::where('user_id', $user->id)
             ->where('status', 'dipinjam')
             ->count();
+            
         $pending = Peminjaman::where('user_id', $user->id)
             ->where('status', 'pending')
             ->count();
+            
+        $totalRiwayat = Peminjaman::where('user_id', $user->id)
+            ->count();
         
-        // Total users (contoh, bisa diambil dari model User)
-        $totalUsers = \App\Models\User::count();
-        
-        // Aktivitas terbaru
+        // Aktivitas terbaru (tidak digunakan di view, tapi bisa ditambahkan nanti)
         $recentActivities = Peminjaman::with('details.inventory')
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
         
-        return view('borrowing.dashboard', compact(
-            'totalPinjam', 
+        return view('borrowing.dashboard-user', compact(
             'sedangDipinjam', 
-            'pending', 
-            'totalUsers',
+            'pending',
+            'totalRiwayat',
             'recentActivities'
         ));
     }
@@ -111,6 +110,7 @@ class PeminjamanUserController extends Controller
             $cart[] = [
                 'inventory_id' => $inventory->id,
                 'nama_barang' => $inventory->nama_barang,
+                'kode_barang' => $inventory->kode_barang ?? 'BAR-' . $inventory->id,
                 'jumlah' => $request->jumlah,
                 'max_stok' => $inventory->jumlah,
                 'added_at' => now()
@@ -122,7 +122,7 @@ class PeminjamanUserController extends Controller
         
         return response()->json([
             'success' => true,
-            'message' => 'Barang ditambahkan ke keranjang',
+            'message' => 'Barang berhasil ditambahkan ke keranjang!',
             'cart_count' => count($cart)
         ]);
     }
@@ -141,9 +141,9 @@ class PeminjamanUserController extends Controller
                 $cartItems[] = [
                     'id' => $item['inventory_id'],
                     'nama_barang' => $inventory->nama_barang,
+                    'kode_barang' => $item['kode_barang'],
                     'jumlah' => $item['jumlah'],
-                    'max_stok' => $inventory->jumlah,
-                    'kode_barang' => $inventory->kode_barang ?? 'BAR-' . $inventory->id
+                    'max_stok' => $inventory->jumlah
                 ];
             }
         }
@@ -156,17 +156,27 @@ class PeminjamanUserController extends Controller
      */
     public function updateCart(Request $request)
     {
+        $request->validate([
+            'inventory_id' => 'required|exists:inventories,id',
+            'action' => 'required|in:increment,decrement'
+        ]);
+        
         $cart = session()->get('borrowing_cart', []);
+        $inventory = Inventory::find($request->inventory_id);
         
         foreach ($cart as $index => $item) {
             if ($item['inventory_id'] == $request->inventory_id) {
                 if ($request->action == 'increment') {
+                    // Cek stok sebelum increment
+                    if (($item['jumlah'] + 1) > $inventory->jumlah) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Stok tidak mencukupi. Stok tersedia: ' . $inventory->jumlah
+                        ]);
+                    }
                     $cart[$index]['jumlah'] += 1;
                 } elseif ($request->action == 'decrement' && $cart[$index]['jumlah'] > 1) {
                     $cart[$index]['jumlah'] -= 1;
-                } elseif ($request->action == 'remove') {
-                    unset($cart[$index]);
-                    $cart = array_values($cart); // Reset array keys
                 }
                 break;
             }
@@ -176,6 +186,34 @@ class PeminjamanUserController extends Controller
         
         return response()->json([
             'success' => true,
+            'cart_count' => count($cart)
+        ]);
+    }
+    
+    /**
+     * Hapus item dari keranjang
+     */
+    public function removeFromCart(Request $request)
+    {
+        $request->validate([
+            'inventory_id' => 'required|exists:inventories,id'
+        ]);
+        
+        $cart = session()->get('borrowing_cart', []);
+        
+        // Filter out the item to remove
+        $cart = array_filter($cart, function($item) use ($request) {
+            return $item['inventory_id'] != $request->inventory_id;
+        });
+        
+        // Reset array keys
+        $cart = array_values($cart);
+        
+        session(['borrowing_cart' => $cart]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Barang berhasil dihapus dari keranjang',
             'cart_count' => count($cart)
         ]);
     }
@@ -254,29 +292,6 @@ class PeminjamanUserController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
-    }
-    
-    /**
-     * Hapus item dari keranjang
-     */
-    public function removeFromCart(Request $request)
-    {
-        $cart = session()->get('borrowing_cart', []);
-        
-        // Filter out the item to remove
-        $cart = array_filter($cart, function($item) use ($request) {
-            return $item['inventory_id'] != $request->inventory_id;
-        });
-        
-        // Reset array keys
-        $cart = array_values($cart);
-        
-        session(['borrowing_cart' => $cart]);
-        
-        return response()->json([
-            'success' => true,
-            'cart_count' => count($cart)
-        ]);
     }
 
     public function riwayat(Request $request)

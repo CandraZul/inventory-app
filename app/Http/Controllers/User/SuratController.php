@@ -74,30 +74,29 @@ class SuratController extends Controller
         }
     }
     
-    /**
-     * Download template surat (REAL DOWNLOAD)
-     */
     public function downloadTemplate()
     {
-        $templatePath = storage_path('app/public/templates/template_surat_pinjaman.docx');
+        // HANYA PAKAI FILE BARU
+        $templatePath = storage_path('app/public/templates/template_surat_pinjam_new.docx');
         
-        // Cek jika template sudah ada
+        // JANGAN ada fallback ke file lama
         if (!file_exists($templatePath)) {
-            // Buat template otomatis jika belum ada
-            $this->createDefaultTemplate();
+            return back()->with('error', 'File template tidak ditemukan. Hubungi admin.');
         }
         
-        // Cek lagi setelah create
-        if (!file_exists($templatePath)) {
-            return redirect()->route('borrowing.dashboard')
-                ->with('error', 'Template surat tidak ditemukan. Silakan hubungi admin.');
-        }
+        // FORCE DOWNLOAD dengan timestamp di nama file
+        $timestamp = time();
+        $fileName = "Template_Surat_Peminjaman_{$timestamp}.docx";
         
-        // Download file
         return response()->download(
             $templatePath, 
-            'Template_Surat_Pinjaman_Lab_PTIK.docx',
-            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+            $fileName, // Nama UNIK setiap download
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ]
         );
     }
     
