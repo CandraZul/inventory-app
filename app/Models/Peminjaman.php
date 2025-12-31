@@ -9,7 +9,6 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
-    // 🔥 INI PALING PENTING
     protected $table = 'peminjamans';
 
     protected $fillable = [

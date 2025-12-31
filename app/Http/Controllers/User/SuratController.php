@@ -10,17 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
 {
-    /**
-     * Tampilkan form upload surat
-     */
+    // Form upload surat
     public function create()
     {
         return view('borrowing.upload-surat');
     }
     
-    /**
-     * Simpan surat yang diupload
-     */
+    // Simpan surat yang diupload
     public function store(Request $request)
     {
         $request->validate([
@@ -74,36 +70,30 @@ class SuratController extends Controller
         }
     }
     
-    /**
-     * Download template surat (REAL DOWNLOAD)
-     */
     public function downloadTemplate()
     {
-        $templatePath = storage_path('app/public/templates/template_surat_pinjaman.docx');
+        $templatePath = storage_path('app/public/templates/template_surat_pinjam_new.docx');
         
-        // Cek jika template sudah ada
         if (!file_exists($templatePath)) {
-            // Buat template otomatis jika belum ada
-            $this->createDefaultTemplate();
+            return back()->with('error', 'File template tidak ditemukan. Hubungi admin.');
         }
         
-        // Cek lagi setelah create
-        if (!file_exists($templatePath)) {
-            return redirect()->route('borrowing.dashboard')
-                ->with('error', 'Template surat tidak ditemukan. Silakan hubungi admin.');
-        }
+        $timestamp = time();
+        $fileName = "Template_Surat_Peminjaman_{$timestamp}.docx";
         
-        // Download file
         return response()->download(
             $templatePath, 
-            'Template_Surat_Pinjaman_Lab_PTIK.docx',
-            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+            $fileName,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ]
         );
     }
     
-    /**
-     * Buat template default jika belum ada
-     */
+    // Template default buat jaga-jaga
     private function createDefaultTemplate()
     {
         $templateDir = storage_path('app/public/templates');
@@ -127,9 +117,7 @@ class SuratController extends Controller
         return file_exists($templatePath);
     }
     
-    /**
-     * Tampilkan daftar surat yang sudah diupload user
-     */
+    // Menampilkan daftar surat jiakhh
     public function index()
     {
         $user = Auth::user();
@@ -140,9 +128,7 @@ class SuratController extends Controller
         return view('borrowing.daftar-surat', compact('suratList'));
     }
 
-    /**
-     * Batalkan surat (hanya untuk status pending)
-     */
+    // Cancel surat (syarat masi pending)
     public function cancel($id)
     {
         $user = Auth::user();
