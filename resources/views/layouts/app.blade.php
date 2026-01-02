@@ -103,16 +103,18 @@
                             <span class="ml-3 font-medium">Approval Peminjaman</span>
                         @endif
                     </a>
-
-                    <a href="{{ route('approval.peminjaman.index') }}"
+                    <!-- Riwayat Peminjaman (Admin & Super Admin) -->
+                    <a href="{{ route('admin.riwayat.index') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
-              {{ request()->routeIs('approval.peminjaman.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
-                        <i class="fas fa-clipboard-check w-5 text-center
-                 {{ request()->routeIs('approval.peminjaman.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+       {{ request()->routeIs('admin.riwayat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-history w-5 text-center
+        {{ request()->routeIs('admin.riwayat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                         @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Approval Peminjaman</span>
+                            <span class="ml-3 font-medium">Riwayat Peminjaman</span>
                         @endif
                     </a>
+
+
                     @endhasanyrole
 
                     <!-- ========== MENU DOSEN & MAHASISWA (UI SAMA) ========== -->
