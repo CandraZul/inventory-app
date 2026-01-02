@@ -19,8 +19,8 @@
 <!-- Sidebar & Navbar untuk user terautentikasi -->
 @auth
     @php
-        $isAdmin = auth()->user()->role === 'admin';
-        $isUser = auth()->user()->role === 'user';
+        $isAdmin = auth()->user()->hasRole('admin');
+        $isUser = auth()->user()->hasRole('mahasiswa');
         $dashboardRoute = $isAdmin ? route('dashboard') : route('borrowing.dashboard');
         $dashboardName = $isAdmin ? 'Dashboard' : 'Dashboard User';
     @endphp

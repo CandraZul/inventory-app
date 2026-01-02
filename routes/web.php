@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeminjamanApprovalController;
 
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+//Route::get('/', function () {
+//    return view('dashboard');
+//})->name('dashboard');
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
@@ -27,9 +27,9 @@ Route::redirect('/home', '/');
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::view('/admin', 'admin');
-});
+//Route::middleware(['auth', 'role:admin'])->group(function () {
+//    Route::view('/admin', 'admin');
+//});
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
