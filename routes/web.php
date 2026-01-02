@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeminjamanApprovalController;
 
 
-
 Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
@@ -127,13 +126,37 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-Route::middleware(['auth', 'role:admin|super admin'])->prefix('approval')->name('approval.')->group(function () {
-    Route::get('/peminjaman', [PeminjamanApprovalController::class, 'index'])
-        ->name('peminjaman.index');
 
-    Route::put('/peminjaman/{id}/approve', [PeminjamanApprovalController::class, 'approve'])
-        ->name('peminjaman.approve');
 
-    Route::put('/peminjaman/{id}/reject', [PeminjamanApprovalController::class, 'reject'])
-        ->name('peminjaman.reject');
+Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
+    Route::get('/approval/peminjaman', [PeminjamanApprovalController::class, 'index'])
+        ->name('approval.peminjaman.index');
+
+    Route::put('/approval/peminjaman/{id}/approve', [PeminjamanApprovalController::class, 'approve'])
+        ->name('approval.peminjaman.approve');
+
+    Route::put('/approval/peminjaman/{id}/reject', [PeminjamanApprovalController::class, 'reject'])
+        ->name('approval.peminjaman.reject');
+
+    Route::put('/approval/surat/{id}/signed-response', [PeminjamanApprovalController::class, 'uploadSignedResponse'])
+        ->name('approval.surat.signed.upload');
+
+    Route::get('/approval/surat/{id}/signed-response', [PeminjamanApprovalController::class, 'downloadSignedResponse'])
+        ->name('approval.surat.signed.download');
 });
+
+Route::middleware(['auth', 'role:admin|super admin'])
+    ->prefix('approval/peminjaman')
+    ->name('approval.peminjaman.')
+    ->group(function () {
+        Route::put('/{id}', [PeminjamanApprovalController::class, 'process'])
+            ->name('process');
+
+        Route::post('/{id}/signed-response', [PeminjamanApprovalController::class, 'uploadSignedResponse'])
+            ->name('signed.upload');
+
+        Route::get('/{id}/signed-response', [PeminjamanApprovalController::class, 'signed.download'])
+            ->name('signed.download');
+    });
+
+
