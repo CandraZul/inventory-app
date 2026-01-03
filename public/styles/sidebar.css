@@ -34,6 +34,24 @@
     background: rgba(100, 116, 139, 0.3);
 }
 
+.sidebar-collapsed .sidebar-text {
+    display: none;
+}
+
+#sidebar .logo-icon {
+    width: 2rem;   /* w-8 */
+    height: 2rem;
+}
+
+body.sidebar-collapsed #sidebar .logo-icon {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem;
+}
+body.sidebar-collapsed #sidebar .logo-icon i {
+    font-size: 0.75rem; /* text-xs */
+}
+
+
 /* Mobile optimization */
 @media (max-width: 767px) {
     .sidebar-item {

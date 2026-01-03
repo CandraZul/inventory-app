@@ -29,23 +29,3 @@ tailwind.config = {
         }
     }
 }
-
-// Inisialisasi awal untuk sidebar state
-document.addEventListener('DOMContentLoaded', function () {
-    // Set sidebar state dari localStorage
-    const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-
-    if (sidebar && sidebarToggle) {
-        if (isCollapsed && !sidebar.classList.contains('w-20')) {
-            sidebar.classList.remove('w-64');
-            sidebar.classList.add('w-20');
-            sidebarToggle.innerHTML = '<i class="fas fa-chevron-right text-sm"></i>';
-        } else if (!isCollapsed && !sidebar.classList.contains('w-64')) {
-            sidebar.classList.remove('w-20');
-            sidebar.classList.add('w-64');
-            sidebarToggle.innerHTML = '<i class="fas fa-chevron-left text-sm"></i>';
-        }
-    }
-});

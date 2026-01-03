@@ -27,11 +27,6 @@ Route::redirect('/home', '/');
 // tak matiin dulu ya
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::view('/admin', 'admin');
-});
-
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -126,8 +121,6 @@ Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');
 })->name('logout');
-
-
 
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/approval/peminjaman', [PeminjamanApprovalController::class, 'index'])

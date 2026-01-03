@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 
 class SidebarController extends Controller
 {
-    public function toggle(Request $request)
+    public function toggle()
     {
-        $collapsed = $request->input('collapsed', false);
-        session(['sidebar_collapsed' => $collapsed]);
-        
+        session([
+            'sidebar_collapsed' => !session('sidebar_collapsed', false)
+        ]);
+
         return response()->json(['success' => true]);
     }
 }
