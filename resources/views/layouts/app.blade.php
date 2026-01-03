@@ -187,17 +187,6 @@
                     </div>
                     @endhasanyrole
 
-                    <!-- ========== MENU DOSEN ONLY ========== -->
-                    @role('dosen')
-                    <a href="{{ route('borrowing.reports') }}"
-                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.reports') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
-                        <i class="fas fa-chalkboard-teacher w-5 text-center text-gray-500"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Lihat Laporan Kelas</span>
-                        @endif
-                    </a>
-                    @endrole
-
                     <!-- Separator tetap dipertahankan -->
                     <div class="pt-4">
                         <div class="{{ !session('sidebar_collapsed') ? 'px-3' : '' }}">

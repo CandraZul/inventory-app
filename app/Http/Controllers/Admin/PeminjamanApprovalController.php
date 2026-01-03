@@ -49,7 +49,9 @@ class PeminjamanApprovalController extends Controller
 
     public function reject($id)
     {
-        DB::table('peminjamans')->where('id', $id)->update(['status' => 'kembali']);
+
+        DB::table('peminjamans')->where('id', $id)->update(['status' => 'ditolak']);
+
         return back()->with('info', 'Pengajuan peminjaman ditolak');
     }
 
@@ -86,6 +88,8 @@ class PeminjamanApprovalController extends Controller
 
             // update status ajuan ke approved + simpan path
         }
+
+//        dd($action);
 
         if($action === 'reject'){
             // Tidak perlu validasi file
