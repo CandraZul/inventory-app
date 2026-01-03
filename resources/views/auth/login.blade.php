@@ -8,7 +8,7 @@
         <!-- Logo & Title -->
         <div>
             <div class="flex justify-center">
-                <div class="bg-primary-600 text-white p-4 rounded-2xl">
+                <div class="bg-[#475569] text-white p-4 rounded-2xl">
                     <i class="fas fa-laptop-code text-4xl"></i>
                 </div>
             </div>
