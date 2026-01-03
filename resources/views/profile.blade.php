@@ -354,41 +354,6 @@
                                 </div>
                             </form>
                         </div>
-
-                        <!-- Display Preferences -->
-                        <div class="border-t border-gray-200 pt-8">
-                            <h3 class="text-lg font-medium text-gray-800 mb-4">Tampilan</h3>
-                            <form method="POST" action="#">
-                                @csrf
-                                @method('PUT')
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Theme -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                                            Tema
-                                        </label>
-                                        <select name="theme"
-                                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg
-                                                   focus:outline-none focus:ring-2 focus:ring-accent-500
-                                                   focus:border-accent-500 transition-colors">
-                                            <option value="light" {{ $user->theme == 'light' ? 'selected' : '' }}>Terang</option>
-                                            <option value="dark" {{ $user->theme == 'dark' ? 'selected' : '' }}>Gelap</option>
-                                            <option value="auto" {{ $user->theme == 'auto' ? 'selected' : '' }}>Otomatis</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="mt-6">
-                                    <button type="submit"
-                                            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white
-                                               rounded-lg transition-colors flex items-center shadow-sm">
-                                        <i class="fas fa-save mr-2"></i>
-                                        Simpan Preferensi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </section>
 
