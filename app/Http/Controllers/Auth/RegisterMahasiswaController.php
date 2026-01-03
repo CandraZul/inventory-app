@@ -36,7 +36,7 @@ class RegisterMahasiswaController extends Controller
             'kontak' => $request->kontak
         ]);
 
-        return redirect()->back()->with('success', 'Mahasiswa berhasil terdaftar');
+        return redirect('/home');
     }
 
 }

@@ -41,6 +41,6 @@ class RegisterDosenController extends Controller
             'kontak'   => $request->kontak,
         ]);
 
-        return redirect()->route('login')->with('success', 'Akun Dosen dibuat');
+        return redirect('/home');
     }
 }
