@@ -15,10 +15,30 @@ use App\Http\Controllers\Admin\RiwayatPeminjamanController;
 
 
 Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+    $user = Auth::user();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    if ($user) {
+        if ($user->hasRole('admin|super admin')) {
+            return redirect()->route('dashboard.admin');
+        } else {
+            return redirect()->route('borrowing.dashboard');
+        }
+    }
+
+    return redirect()->route('login');
+});
+
+// Admin dashboard
+Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard')->name('dashboard.admin');
+});
+
+// User dashboard
+Route::middleware('auth')->prefix('borrowing')->name('borrowing.')->group(function () {
+    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
+        ->name('dashboard');
+});
+
 
 Auth::routes();
 
