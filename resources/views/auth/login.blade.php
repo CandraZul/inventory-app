@@ -8,7 +8,7 @@
         <!-- Logo & Title -->
         <div>
             <div class="flex justify-center">
-                <div class="bg-primary-600 text-white p-4 rounded-2xl">
+                <div class="bg-[#475569] text-white p-4 rounded-2xl">
                     <i class="fas fa-laptop-code text-4xl"></i>
                 </div>
             </div>
@@ -77,12 +77,18 @@
 
                 <div>
                     <button type="submit"
-                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <i class="fas fa-sign-in-alt text-primary-300 group-hover:text-primary-400"></i>
+                            class="group relative w-full flex justify-center items-center py-3 px-4 text-sm
+                            font-semibold rounded-lg text-white bg-[#475569] hover:bg-[#334155] focus:outline-none
+                            focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6] transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98]">
+
+                        <!-- Icon kiri -->
+                        <span class="absolute left-3 inset-y-0 flex items-center text-slate-300 group-hover:text-white transition">
+                            <i class="fas fa-sign-in-alt"></i>
                         </span>
+
                         Masuk ke Sistem
                     </button>
+
                 </div>
                 <div class="mt-6">
                     <div class="relative">
