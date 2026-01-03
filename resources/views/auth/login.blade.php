@@ -65,14 +65,6 @@
                             Ingat saya
                         </label>
                     </div>
-
-                    @if (Route::has('password.request'))
-                        <div class="text-sm">
-                            <a href="{{ route('password.request') }}" class="font-medium text-primary-600 hover:text-primary-500">
-                                Lupa password?
-                            </a>
-                        </div>
-                    @endif
                 </div>
 
                 <div>
