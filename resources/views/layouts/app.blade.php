@@ -43,7 +43,7 @@
                                 w-8 h-8">
                         <i class="fas fa-laptop-code text-white transition-all duration-300 text-sm"></i>
                     </div>
-                    <div class="sidebar-text">
+                    <div class="sidebar-text flex flex-col">
                         <span class="text-lg font-semibold text-gray-800 whitespace-nowrap">Inventory TIK</span>
                         <span class="text-xs px-2 py-1 rounded {{ $isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }}">
                             {{ $isAdmin ? 'Admin' : 'User' }}
