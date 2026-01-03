@@ -57,51 +57,48 @@
                                    class="text-purple-600 hover:underline text-xs font-bold mb-1 inline-block">
                                     Unduh Balasan
                                 </a>
-                            @endif
+                        @endif
 
-                            @if($item->status === 'pending')
-                                <form method="POST"
-                                      action="{{ route('approval.peminjaman.process', $item->peminjaman_id) }}"
-                                      enctype="multipart/form-data"
-                                      class="mt-1">
-
-                                    @method('PUT')
-                                    @csrf
-
-                                    <input type="file" name="signed_pdf"
-                                           class="text-xs w-28 border rounded p-1 mb-1 block mx-auto" required>
-
-                                    <!-- Tombol hidden buat nentuin approve / reject -->
-                                    <button type="submit" name="action" value="approve"
-                                            class="hidden"></button>
-                                    <button type="submit" name="action" value="reject"
-                                            class="hidden"></button>
-                                </form>
-                            @else
-                                <span class="text-gray-400 text-xs italic">Belum ada</span>
-                            @endif
-                        </td>
-
-                        <!-- KOLOM AKSI -->
                         <td class="p-3 text-center">
-                            @if($item->status === 'pending')
-                                <!-- APPROVE -->
-                                <button type="submit" form="{{ 'form-'.$item->peminjaman_id }}"
-                                        name="action" value="approve"
-                                        class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold">
-                                    ACC
-                                </button>
+                            @if($item->status === 'dipinjam')
+                                <span class="text-gray-400 text-xs italic">Sedang dipinjam</span>
 
-                                <!-- REJECT -->
-                                <button type="submit" form="{{ 'form-'.$item->peminjaman_id }}"
-                                        name="action" value="reject"
-                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
-                                    Tolak
-                                </button>
                             @else
-                                <span class="text-gray-400 text-xs italic">Sudah diproses</span>
+                                @if($item->status === 'pending')
+                                    <form id="form-{{ $item->peminjaman_id }}"
+                                          method="POST"
+                                          action="{{ route('approval.peminjaman.process', $item->peminjaman_id) }}"
+                                          enctype="multipart/form-data"
+                                          class="space-y-1">
+
+                                        @method('PUT')
+                                        @csrf
+
+                                        <input type="file" name="signed_pdf"
+                                               class="text-xs w-28 border rounded p-1 block mx-auto">
+
+                                        <div class="flex justify-center gap-1">
+                                            <button type="submit" name="action" value="approve"
+                                                    class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold">
+                                                ACC
+                                            </button>
+
+                                            <button type="submit" name="action" value="reject"
+                                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
+                                                Tolak
+                                            </button>
+                                        </div>
+
+                                    </form>
+
+                                @else
+                                    <span class="text-gray-400 text-xs italic">Sudah diproses</span>
+                                @endif
                             @endif
                         </td>
+
+
+
 
                     </tr>
                 @endforeach

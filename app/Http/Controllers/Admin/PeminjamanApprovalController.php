@@ -72,30 +72,29 @@ class PeminjamanApprovalController extends Controller
         return response()->download(storage_path('app/' . $file));
     }
 
-    public function process($id, Request $request)
-    {
-        // simpan file balasan admin
-        $path = $request->file('signed_pdf')->store('signed_responses', 'public');
+    public function process(Request $request, $id){
+        $action = $request->action;
 
-        // update status peminjaman
-        if ($request->input('action') === 'approve') {
-            $status = 'dipinjam';
-            $message = 'Pengajuan berhasil di-ACC';
-        } else {
-            $status = 'kembali';
-            $message = 'Pengajuan peminjaman ditolak';
+        if($action === 'approve'){
+            $request->validate([
+                'signed_pdf' => 'required|mimes:pdf,doc,docx|max:2048'
+            ]);
+
+            // Simpan file karena approve
+            $file = $request->file('signed_pdf');
+            $path = $file->store('surat-balasan');
+
+            // update status ajuan ke approved + simpan path
         }
 
-        DB::table('peminjamans')->where('id', $id)->update(['status' => $status]);
+        if($action === 'reject'){
+            // Tidak perlu validasi file
+            // langsung update status ajuan ke rejected
+        }
 
-        // simpan path balasan
-        DB::table('surat_peminjamans')->updateOrInsert(
-            ['peminjaman_id' => $id],
-            ['signed_response_path' => $path]
-        );
-
-        return back()->with('info', $message);
+        return redirect()->back()->with('success', 'Status ajuan berhasil diperbarui');
     }
+
 
 }
 
