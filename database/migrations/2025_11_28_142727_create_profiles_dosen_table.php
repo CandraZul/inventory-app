@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('profiles_dosen', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('nip');
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->string('nip')->unique();
             $table->string('kontak');
             $table->timestamps();
 

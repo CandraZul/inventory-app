@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +24,7 @@ class ProfileController extends Controller
             'email' => $user->email,
             'id_number' => $user->mahasiswaProfile->nim ?? $user->dosenProfile->nip ?? null,
             'phone' => $user->mahasiswaProfile->kontak ?? $user->dosenProfile->kontak ?? null,
+            'totalRiwayat' => Peminjaman::where('user_id', $user->id)->count()
         ]);
     }
 

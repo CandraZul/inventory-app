@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('profiles_mahasiswa', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
-            $table->string('nim');
+            $table->string('nim')->unique();
             $table->string('kontak');
             $table->timestamps();
 
