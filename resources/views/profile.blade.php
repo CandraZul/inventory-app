@@ -57,11 +57,7 @@
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-600">Total Peminjaman</span>
-                                <span class="text-sm font-semibold text-gray-800">{{ $stats['total_borrowings'] ?? 0 }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Tepat Waktu</span>
-                                <span class="text-sm font-semibold text-green-600">{{ $stats['on_time_returns'] ?? 0 }}</span>
+                                <span class="text-sm font-semibold text-gray-800">{{ $totalRiwayat ?? 0 }}</span>
                             </div>
                         </div>
                     </div>
