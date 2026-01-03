@@ -150,7 +150,7 @@
                                 <i id="surat-arrow"
                                    class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
                         </button>
-                            <div id="sidebar-text surat-submenu"
+                            <div id="surat-submenu"
                                  class="ml-10 space-y-1 mt-1 {{ request()->routeIs('borrowing.surat.*') ? '' : 'hidden' }}">
                                 <a href="{{ route('borrowing.surat.upload') }}"
                                    class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.upload') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
