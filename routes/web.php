@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisterAdminController;
 use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\User\SuratController;
@@ -14,31 +15,15 @@ use App\Http\Controllers\Admin\PeminjamanApprovalController;
 use App\Http\Controllers\Admin\RiwayatPeminjamanController;
 
 
-Route::get('/', function () {
-    $user = Auth::user();
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 
-    if ($user) {
-        if ($user->hasRole('admin|super admin')) {
-            return redirect()->route('dashboard.admin');
-        } else {
-            return redirect()->route('borrowing.dashboard');
-        }
-    }
-
-    return redirect()->route('login');
-});
-
-// Admin dashboard
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard')->name('dashboard.admin');
+    Route::get('/admin/dashboard', [HomeController::class, 'adminDashboard'])->name('dashboard.admin');
 });
 
-// User dashboard
 Route::middleware('auth')->prefix('borrowing')->name('borrowing.')->group(function () {
-    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
-        ->name('dashboard');
+    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])->name('dashboard');
 });
-
 
 Auth::routes();
 
