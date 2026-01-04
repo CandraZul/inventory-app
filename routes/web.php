@@ -21,6 +21,13 @@ Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/admin/dashboard', [HomeController::class, 'adminDashboard'])->name('dashboard.admin');
+    // Inventory
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+    Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 });
 
 Route::middleware('auth')->prefix('borrowing')->name('borrowing.')->group(function () {
@@ -60,13 +67,7 @@ Route::post('/toggle-sidebar', [SidebarController::class, 'toggle'])
     ->middleware(['auth'])
     ->name('toggle-sidebar');
 
-// Inventory
-Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
-Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
-Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
-Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
-Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+
 
 
 Route::middleware(['auth'])->prefix('borrowing')->group(function () {
@@ -167,7 +168,7 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
 
     Route::get('/surat-peminjaman', [SuratPinjamAdmSideController::class, 'index'])
     ->name('admin.surat.index');
-    
+
     Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
     ->name('admin.surat.download');
 });
