@@ -128,7 +128,7 @@ class SuratController extends Controller
         return view('borrowing.daftar-surat', compact('suratList'));
     }
 
-    // Cancel surat (syarat masi pending)
+    // Cancel surat
     public function cancel($id)
     {
         $user = Auth::user();

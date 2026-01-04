@@ -293,11 +293,6 @@
                                         <i class="fas fa-list w-4 text-center mr-2"></i>
                                         Daftar Surat
                                     </a>
-                                    <a href="{{ route('borrowing.surat.template') }}"
-                                       class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.template') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
-                                        <i class="fas fa-download w-4 text-center mr-2"></i>
-                                        Template Surat
-                                    </a>
                                 </div>
                             @endif
                         </div>
