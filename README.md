@@ -104,19 +104,25 @@ DB_PASSWORD=
 php artisan migrate --seed
 ```
 
-7. Jalankan asset frontend
+7. Storage Symbolic link
+
+```bash
+php artisan storage:link
+```
+
+8. Jalankan asset frontend
 
 ```bash
 npm run dev
 ```
 
-8. Jalankan server aplikasi
+9. Jalankan server aplikasi
 
 ```bash
 php artisan serve
 ```
 
-Akses aplikasi melalui:
+10. Akses aplikasi melalui:
 
 ```
 http://127.0.0.1:8000
