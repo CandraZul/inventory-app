@@ -66,7 +66,7 @@ barang, peminjaman, persetujuan (approval), serta pengelolaan pengguna dengan si
 
 1. Clone repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/CandraZul/inventory-app
 cd inventory-app
 ````
 
