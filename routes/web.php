@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterMahasiswaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\SuratPinjamAdmSideController;
 
 use App\Http\Controllers\User\SuratController;
 use App\Http\Controllers\InventoryController;
@@ -163,6 +164,12 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
 
     Route::get('/admin/riwayat', [RiwayatPeminjamanController::class, 'index'])
         ->name('admin.riwayat.index');
+
+    Route::get('/surat-peminjaman', [SuratPinjamAdmSideController::class, 'index'])
+    ->name('admin.surat.index');
+    
+    Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
+    ->name('admin.surat.download');
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
@@ -178,4 +185,3 @@ Route::middleware(['auth', 'role:admin|super admin'])
         Route::get('/{id}/signed-response', [PeminjamanApprovalController::class, 'signed.download'])
             ->name('signed.download');
     });
-
