@@ -13,10 +13,10 @@
             </h1>
             <p class="text-gray-600 mt-1">Riwayat peminjaman barang Anda</p>
         </div>
-        
+
         <!-- Filter Status -->
         <form method="GET" action="{{ route('borrowing.riwayat') }}">
-            <select name="status" onchange="this.form.submit()" 
+            <select name="status" onchange="this.form.submit()"
                     class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">-- Semua Status --</option>
                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -81,6 +81,12 @@
                                         <i class="fas fa-check-circle mr-1"></i>
                                         Dikembalikan
                                     </span>
+                                @elseif($peminjaman->status == 'ditolak')
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-times-circle mr-1"></i>
+                                        Ditolak
+                                    </span>
+
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -98,7 +104,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <!-- Pagination -->
         @if($riwayat->hasPages())
         <div class="px-6 py-4 border-t border-gray-200">
@@ -106,7 +112,7 @@
         </div>
         @endif
     </div>
-    
+
     @else
     <!-- Empty State -->
     <div class="bg-white rounded-xl shadow p-8 text-center">
@@ -121,8 +127,8 @@
                 Anda belum pernah meminjam barang
             @endif
         </p>
-        
-        <a href="{{ route('borrowing.pinjam') }}" 
+
+        <a href="{{ route('borrowing.pinjam') }}"
            class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium">
             <i class="fas fa-cart-plus"></i>
             Mulai Pinjam

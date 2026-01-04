@@ -153,8 +153,6 @@ Route::middleware(['auth', 'role:admin|super admin'])
     ->prefix('approval/peminjaman')
     ->name('approval.peminjaman.')
     ->group(function () {
-        Route::put('/{id}', [PeminjamanApprovalController::class, 'process'])
-            ->name('process');
 
         Route::post('/{id}/signed-response', [PeminjamanApprovalController::class, 'uploadSignedResponse'])
             ->name('signed.upload');

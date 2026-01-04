@@ -26,29 +26,18 @@ class PeminjamanApprovalController extends Controller
                 'd.jumlah',
                 'p.status',
                 'p.tanggal_pinjam',
-
-                // Surat dari user
-                's.user_id as surat_user_id',
                 's.surat_path as surat_user_path',
                 's.status as surat_status',
-
-                // Surat balasan admin
-                's.signed_response_path' // ← WAJIB di-select karena akan dipakai di view
+                's.signed_response_path as signed_response_path'
             )
+            ->orderBy('p.tanggal_pinjam', 'asc') // ← ini biar paling awal di atas
             ->get()
             ->map(function ($item) {
-                // Role dari user pemohon peminjaman
                 $item->role = User::find($item->user_id)?->getRoleNames()->first() ?? '-';
-
-                // URL download surat dari user
                 $item->surat_url = $item->surat_user_path ? Storage::url($item->surat_user_path) : null;
-
-                // URL download balasan admin
                 $item->signed_response_url = $item->signed_response_path ? Storage::url($item->signed_response_path) : null;
-
                 return $item;
             });
-
 
 
         return view('admin.approval.index', ['ajuan' => $ajuan]);
@@ -56,14 +45,18 @@ class PeminjamanApprovalController extends Controller
 
     public function approve($id)
     {
-        DB::table('peminjamans')->where('id', $id)->update(['status' => 'dipinjam']);
-        return back()->with('success', 'Pengajuan peminjaman berhasil di-ACC');
+        DB::table('peminjamans')
+            ->where('id', $id)
+            ->update(['status' => 'dipinjam']);
+
+        return back()->with('success', 'Pengajuan peminjaman berhasil di-ACC dan status berubah menjadi dipinjam');
     }
 
     public function reject($id)
     {
-
-        DB::table('peminjamans')->where('id', $id)->update(['status' => 'ditolak']);
+        DB::table('peminjamans')
+            ->where('id', $id)
+            ->update(['status' => 'ditolak']);
 
         return back()->with('info', 'Pengajuan peminjaman ditolak');
     }
@@ -87,7 +80,8 @@ class PeminjamanApprovalController extends Controller
         return response()->download(storage_path('app/' . $file));
     }
 
-    public function process(Request $request, $id){
+    public function process(Request $request, $id)
+    {
         $action = $request->action;
 
         if ($action === 'approve') {
@@ -98,20 +92,17 @@ class PeminjamanApprovalController extends Controller
             $file = $request->file('signed_pdf');
             $path = $file->store('surat-balasan');
 
-            // ⬇ Tambahkan ini
-            DB::table('peminjamans')
-                ->where('id', $id)
-                ->update(['status' => 'dipinjam']);
+            DB::table('peminjamans')->where('id', $id)->update(['status' => 'dipinjam']);
 
-            // simpan juga surat balasan kalau perlu
             DB::table('surat_peminjamans')->updateOrInsert(
                 ['peminjaman_id' => $id],
                 ['signed_response_path' => $path]
             );
+
+            return back()->with('success', 'Pengajuan di-ACC dan surat balasan berhasil diupload');
         }
 
-
-        return redirect()->back()->with('success', 'Status ajuan berhasil diperbarui');
+        return back()->with('info', 'Aksi tidak valid');
     }
 
 

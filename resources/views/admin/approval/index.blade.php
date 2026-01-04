@@ -66,7 +66,7 @@
                             @elseif($item->status === 'pending')
                                 <form id="form-{{ $item->peminjaman_id }}"
                                       method="POST"
-                                      action="{{ route('approval.peminjaman.process', $item->peminjaman_id) }}"
+                                      action="{{ route('approval.peminjaman.approve', $item->peminjaman_id) }}"
                                       enctype="multipart/form-data"
                                       class="space-y-1">
 
@@ -80,7 +80,7 @@
 
                                         <!-- ACC -->
                                         <button type="submit"
-                                                formaction="{{ route('approval.peminjaman.process', $item->peminjaman_id) }}"
+                                                action="{{ route('approval.peminjaman.approve', $item->peminjaman_id) }}"
                                                 name="action" value="approve"
                                                 class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold">
                                             ACC
