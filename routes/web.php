@@ -164,11 +164,8 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
         ->name('admin.surat.index');
 
     Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
-<<<<<<< HEAD
         ->name('admin.surat.download');
-=======
-    ->name('admin.surat.download');
->>>>>>> 9287f3f5d6e97aaba4348ae400dfbe2de91440f0
+
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
@@ -189,9 +186,3 @@ Route::middleware(['auth', 'role:admin|super admin'])
 Route::middleware(['auth', 'role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function () {
     Route::get('/', [SuratAdminController::class, 'index'])->name('index');
 });
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 9287f3f5d6e97aaba4348ae400dfbe2de91440f0

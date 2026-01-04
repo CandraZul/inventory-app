@@ -69,9 +69,10 @@
                     <!-- Dashboard -->
                     <a href="{{ route('dashboard') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
-              {{ request()->routeIs('dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+              {{ request()->routeIs('dashboard.admin') ? 'active-sidebar-item text-accent-600' : 'text-gray-700
+              hover:text-gray-900' }}">
                         <i class="fas fa-tachometer-alt w-5 text-center
-                 {{ request()->routeIs('dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                 {{ request()->routeIs('dashboard.admin') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                             <span class="sidebar-text ml-3 font-medium">Dashboard</span>
                     </a>
 
@@ -129,11 +130,6 @@
                         <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                         <span class="sidebar-text ml-3 font-medium">Surat Peminjaman</span>
                     </a>
-<<<<<<< HEAD
-
->>>>>>> develop
-=======
->>>>>>> 9287f3f5d6e97aaba4348ae400dfbe2de91440f0
 
                     @endhasanyrole
 
