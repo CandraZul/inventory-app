@@ -25,7 +25,8 @@ class SuratController extends Controller
             'keperluan' => 'nullable|string|max:500',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:5120' // PDF atau Word, max 5MB
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:5120', // PDF atau Word, max 5MB
+            'peminjaman_id' => 'required|exists:peminjamans,id'
         ], [
             'no_hp.regex' => 'Format nomor HP tidak valid',
             'surat.mimes' => 'File harus berupa PDF atau Word (doc, docx)',
@@ -56,7 +57,8 @@ class SuratController extends Controller
                     'tanggal_mulai' => $request->tanggal_mulai,
                     'tanggal_selesai' => $request->tanggal_selesai,
                     'surat_path' => $path,
-                    'status' => 'pending'
+                    'status' => 'pending',
+                    'peminjaman_id' => $request->peminjaman_id
                 ]);
                 
                 return redirect()->route('borrowing.dashboard')

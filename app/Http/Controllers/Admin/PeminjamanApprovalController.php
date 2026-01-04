@@ -26,17 +26,30 @@ class PeminjamanApprovalController extends Controller
                 'd.jumlah',
                 'p.status',
                 'p.tanggal_pinjam',
-                's.surat_path',
+
+                // Surat dari user
+                's.user_id as surat_user_id',
+                's.surat_path as surat_user_path',
                 's.status as surat_status',
-                's.signed_response_path'
+
+                // Surat balasan admin
+                's.signed_response_path' // ← WAJIB di-select karena akan dipakai di view
             )
             ->get()
             ->map(function ($item) {
+                // Role dari user pemohon peminjaman
                 $item->role = User::find($item->user_id)?->getRoleNames()->first() ?? '-';
-                $item->surat_url = $item->surat_path ? Storage::url($item->surat_path) : null;
+
+                // URL download surat dari user
+                $item->surat_url = $item->surat_user_path ? Storage::url($item->surat_user_path) : null;
+
+                // URL download balasan admin
                 $item->signed_response_url = $item->signed_response_path ? Storage::url($item->signed_response_path) : null;
+
                 return $item;
             });
+
+
 
         return view('admin.approval.index', ['ajuan' => $ajuan]);
     }
@@ -77,24 +90,26 @@ class PeminjamanApprovalController extends Controller
     public function process(Request $request, $id){
         $action = $request->action;
 
-        if($action === 'approve'){
+        if ($action === 'approve') {
             $request->validate([
-                'signed_pdf' => 'required|mimes:pdf,doc,docx|max:2048'
+                'signed_pdf' => 'required|mimes:pdf|max:2048'
             ]);
 
-            // Simpan file karena approve
             $file = $request->file('signed_pdf');
             $path = $file->store('surat-balasan');
 
-            // update status ajuan ke approved + simpan path
+            // ⬇ Tambahkan ini
+            DB::table('peminjamans')
+                ->where('id', $id)
+                ->update(['status' => 'dipinjam']);
+
+            // simpan juga surat balasan kalau perlu
+            DB::table('surat_peminjamans')->updateOrInsert(
+                ['peminjaman_id' => $id],
+                ['signed_response_path' => $path]
+            );
         }
 
-//        dd($action);
-
-        if($action === 'reject'){
-            // Tidak perlu validasi file
-            // langsung update status ajuan ke rejected
-        }
 
         return redirect()->back()->with('success', 'Status ajuan berhasil diperbarui');
     }

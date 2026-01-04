@@ -38,14 +38,13 @@
                         <!-- Download Surat Pemohon -->
                         <td class="p-3 text-center">
                             @if($item->surat_url)
-                                <a href="{{ $item->surat_url }}" target="_blank"
-                                   class="text-blue-600 hover:underline text-xs font-bold">
-                                    Download PDF
-                                </a>
+                                <a href="{{ $item->surat_url }}" target="_blank">Download PDF</a>
                             @else
-                                <span class="text-gray-400 text-xs italic">Tidak ada surat</span>
+                                Tidak ada surat
                             @endif
+
                         </td>
+
 
                         <!-- Unduh Surat Balasan Admin -->
                         <td class="p-3 text-center">
