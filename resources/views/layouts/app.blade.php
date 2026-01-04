@@ -144,7 +144,6 @@
                         <i class="fas fa-history w-5 text-center {{ request()->routeIs('borrowing.riwayat') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                             <span class="sidebar-text ml-3 font-medium">Riwayat Saya</span>
                     </a>
-
                     <!-- Surat Saya -->
                     <div class="space-y-1">
                         <button type="button" onclick="toggleSuratMenu()"
