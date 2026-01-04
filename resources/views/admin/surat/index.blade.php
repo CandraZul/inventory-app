@@ -4,27 +4,41 @@
 
 @section('content')
     <div class="bg-white rounded-xl shadow p-6">
-        <table class="w-full text-sm border">
-            <thead class="bg-gray-100">
-            <tr>
-                <th class="p-2 border">User</th>
-                <th class="p-2 border">Peminjaman ID</th>
-                <th class="p-2 border">Status</th>
-                <th class="p-2 border">File Surat</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($surat as $s)
+        <div class="overflow-x-auto">
+            <table class="w-full text-lg text-center border border-gray-200 rounded-lg">
+                <thead class="bg-gray-100 text-gray-700 font-semibold">
                 <tr>
-                    <td class="p-2 border">{{ $s->user_id }}</td>
-                    <td class="p-2 border">{{ $s->peminjaman_id }}</td>
-                    <td class="p-2 border">{{ $s->status }}</td>
-                    <td class="p-2 border">
-                        <a class="text-blue-600 underline" href="{{ asset($s->surat_path) }}">Lihat</a>
-                    </td>
+                    <th class="px-4 py-3 border-b">ID</th>
+                    <th class="px-4 py-3 border-b">User ID</th>
+                    <th class="px-4 py-3 border-b">Nama</th>
+                    <th class="px-4 py-3 border-b">Nomor HP</th>
+                    <th class="px-4 py-3 border-b">Tanggal Pinjam</th>
+                    <th class="px-4 py-3 border-b">Tanggal Kembali</th>
+                    <th class="px-4 py-3 border-b">File Surat</th>
                 </tr>
-            @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach($surat as $s)
+                    <tr class="hover:bg-gray-50 transition">
+{{--                        {{dd($s)}}--}}
+                        <td class="px-4 py-3 border-b">{{ $s->id }}</td>
+                        <td class="px-4 py-3 border-b">{{ $s->user_id }}</td>
+                        <td class="px-4 py-3 border-b">{{ $s->nama_pemohon }}</td>
+                        <td class="px-4 py-3 border-b">{{ $s->no_hp }}</td>
+                        <td class="px-4 py-3 border-b">{{ $s->tanggal_mulai }}</td>
+                        <td class="px-4 py-3 border-b">{{ $s->tanggal_selesai }}</td>
+
+                        <td class="px-4 py-3 border-b">
+                            <a class="text-blue-600 underline font-medium hover:text-blue-800 transition"
+                               href="{{ Storage::url($s->surat_path) }}"
+                               target="_blank">
+                                Lihat Surat
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class RiwayatPeminjamanController extends Controller
 {
@@ -19,29 +20,38 @@ class RiwayatPeminjamanController extends Controller
             ->leftJoin('profiles_dosen as dsn', 'dsn.user_id', '=', 'u.id')
             ->select([
                 'p.id as peminjaman_id',
-                'u.id as user_id',
-                'u.name as nama_user',
+                'p.user_id as user_id',
+                'u.name as peminjam',
                 DB::raw('COALESCE(mhs.nim, dsn.nip) as identitas'),
                 'u.email as kontak',
                 'p.status',
                 'p.tanggal_pinjam',
                 'p.tanggal_kembali',
-                DB::raw('GROUP_CONCAT(
-                    JSON_OBJECT(
-                        "nama", i.nama_barang,
-                        "jumlah", d.jumlah
-                    )
-                ) as items')
+                DB::raw('(SELECT JSON_ARRAYAGG(JSON_OBJECT("nama", iv.nama_barang, "jumlah", det.jumlah))
+                          FROM peminjaman_details as det
+                          JOIN inventories as iv ON iv.id = det.inventory_id
+                          WHERE det.peminjaman_id = p.id) as items')
             ])
-            ->groupBy('p.id', 'u.id', 'u.name', 'identitas', 'u.email', 'p.status', 'p.tanggal_pinjam', 'p.tanggal_kembali')
             ->orderByDesc('p.tanggal_pinjam')
-            ->paginate(10);
+            ->groupBy('p.id','p.user_id','u.name','mhs.nim','dsn.nip','u.email','p.status','p.tanggal_pinjam','p.tanggal_kembali')
+            ->get();
 
-        $data->through(function ($item) {
+        $data = $data->map(function($item){
             $item->role = User::find($item->user_id)?->getRoleNames()->first() ?? '-';
             return $item;
         });
 
-        return view('admin.riwayat.index', compact('data'));
+        $page = $request->get('page', 1);
+        $perPage = 10;
+
+        $paginator = new LengthAwarePaginator(
+            $data->forPage($page, $perPage),
+            $data->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('admin.riwayat.index', ['data' => $paginator]);
     }
 }
