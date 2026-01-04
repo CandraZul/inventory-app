@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeminjamanApprovalController;
 use App\Http\Controllers\Admin\RiwayatPeminjamanController;
+use App\Http\Controllers\Admin\PengembalianController;
+use \App\Http\Controllers\Admin\SuratAdminController;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('dashboard');
@@ -157,12 +159,6 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::put('/approval/peminjaman/{id}/reject', [PeminjamanApprovalController::class, 'reject'])
         ->name('approval.peminjaman.reject');
 
-    Route::put('/approval/surat/{id}/signed-response', [PeminjamanApprovalController::class, 'uploadSignedResponse'])
-        ->name('approval.surat.signed.upload');
-
-    Route::get('/approval/surat/{id}/signed-response', [PeminjamanApprovalController::class, 'downloadSignedResponse'])
-        ->name('approval.surat.signed.download');
-
     Route::get('/admin/riwayat', [RiwayatPeminjamanController::class, 'index'])
         ->name('admin.riwayat.index');
 
@@ -174,15 +170,24 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
-    ->prefix('approval/peminjaman')
-    ->name('approval.peminjaman.')
+    ->prefix('admin/pengembalian')
+    ->name('admin.pengembalian.')
     ->group(function () {
-        Route::put('/{id}', [PeminjamanApprovalController::class, 'process'])
-            ->name('process');
+        Route::get('/', [PengembalianController::class, 'index'])->name('index');
 
-        Route::post('/{id}/signed-response', [PeminjamanApprovalController::class, 'uploadSignedResponse'])
-            ->name('signed.upload');
+        Route::put('/{id}/update', [PengembalianController::class, 'updateTanggalKembali'])
+            ->name('update');
 
-        Route::get('/{id}/signed-response', [PeminjamanApprovalController::class, 'signed.download'])
-            ->name('signed.download');
+        Route::get('/admin/pengembalian/{id}/details', [RiwayatPeminjamanController::class, 'details'])
+            ->name('admin.peminjaman.details');
+
+
+
     });
+
+Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function(){
+    Route::get('/', [SuratAdminController::class, 'index'])->name('index');
+});
+
+
+

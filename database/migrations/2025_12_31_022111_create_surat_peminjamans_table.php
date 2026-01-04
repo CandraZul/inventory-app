@@ -29,7 +29,6 @@ return new class extends Migration
             
             // Barang yang ingin dipinjam (bisa JSON atau relasi terpisah)
             $table->json('barang_dipinjam')->nullable();
-            $table->string('signed_response_path')->nullable();
 
             $table->timestamps();
             

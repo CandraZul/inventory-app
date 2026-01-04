@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Approval Peminjaman')
+@section('title', 'Kelola Peminjaman')
 @section('subtitle', 'Kelola status ajuan peminjaman barang laboratorium PTIK')
 
 @section('content')
@@ -12,108 +12,117 @@
                 <tr>
                     <th class="p-3 text-left">ID Ajuan</th>
                     <th class="p-3 text-left">Pemohon</th>
-                    <th class="p-3 text-left">Role</th>
-                    <th class="p-3 text-left">Barang</th>
-                    <th class="p-3 text-center">Jumlah</th>
+                    <th class="p-3 text-center">NIM/NIP</th>
+                    <th class="p-3 text-center">Role</th>
+                    <th class="p-3 text-center">Barang</th>
                     <th class="p-3 text-center">Status</th>
                     <th class="p-3 text-center">Tanggal Pinjam</th>
-                    <th class="p-3 text-center">Surat Pemohon (PDF)</th>
-                    <th class="p-3 text-center">Surat Balasan Admin (Signed PDF)</th>
                     <th class="p-3 text-center">Aksi</th>
                 </tr>
                 </thead>
-                <tbody>
 
+                <tbody>
                 @foreach($ajuan as $item)
                     <tr class="border-b hover:bg-gray-50">
-
                         <td class="p-3 font-bold">{{ $item->peminjaman_id }}</td>
                         <td class="p-3">{{ $item->peminjam }}</td>
+                        <td class="p-3 text-center">{{ $item->identitas ?? '-' }}</td>
+                        <td class="p-3 text-center capitalize">{{ $item->role ?? '-' }}</td>
 
-                        <!-- Role hasil mapping di controller -->
-                        <td class="p-3 capitalize">{{ $item->role ?? '-' }}</td>
+                        {{-- Tombol Modal --}}
+                        <td class="p-3 text-center">
+                            <button onclick="openModal({{ $item->peminjaman_id }})"
+                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold">
+                                Lihat Barang
+                            </button>
+                        </td>
 
-                        <td class="p-3">{{ $item->nama_barang }}</td>
-                        <td class="p-3 text-center">{{ $item->jumlah }}</td>
                         <td class="p-3 text-center font-semibold">{{ $item->status }}</td>
                         <td class="p-3 text-center">{{ $item->tanggal_pinjam }}</td>
 
-                        <!-- DOWNLOAD SURAT PEMOHON -->
+                        {{-- Tombol ACC/Tolak --}}
                         <td class="p-3 text-center">
-                            @if($item->surat_url)
-                                <a href="{{ $item->surat_url }}" target="_blank"
-                                   class="text-blue-600 hover:underline text-xs font-bold">
-                                    Download PDF
-                                </a>
-                            @else
-                                <span class="text-gray-400 text-xs italic">Tidak ada surat</span>
-                            @endif
+                            <div class="flex justify-center gap-1">
+                                <form method="POST" action="{{ route('approval.peminjaman.approve', $item->peminjaman_id) }}">
+                                    @csrf @method('PUT')
+                                    <button class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold">
+                                        ACC
+                                    </button>
+                                </form>
+
+                                <form method="POST" action="{{ route('approval.peminjaman.reject', $item->peminjaman_id) }}">
+                                    @csrf @method('PUT')
+                                    <button class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
+                                        Tolak
+                                    </button>
+                                </form>
+                            </div>
                         </td>
-
-                        <!-- UPLOAD + UNDUH SURAT BALASAN ADMIN -->
-                        <td class="p-3 text-center">
-                            @if(!empty($item->signed_response_url))
-                                <a href="{{ $item->signed_response_url }}" target="_blank"
-                                   class="text-purple-600 hover:underline text-xs font-bold mb-1 inline-block">
-                                    Unduh Balasan
-                                </a>
-                        @endif
-
-                        <td class="p-3 text-center">
-                            @if($item->status === 'dipinjam')
-                                <span class="text-gray-400 text-xs italic">Sedang dipinjam</span>
-
-                            @else
-                                @if($item->status === 'pending')
-                                    <form id="form-{{ $item->peminjaman_id }}"
-                                          method="POST"
-                                          action="{{ route('approval.peminjaman.process', $item->peminjaman_id) }}"
-                                          enctype="multipart/form-data"
-                                          class="space-y-1">
-
-                                        @method('PUT')
-                                        @csrf
-
-                                        <input type="file" name="signed_pdf"
-                                               class="text-xs w-28 border rounded p-1 block mx-auto">
-
-                                        <div class="flex justify-center gap-1">
-                                            <button type="submit" name="action" value="approve"
-                                                    class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold">
-                                                ACC
-                                            </button>
-
-                                            <button type="submit" name="action" value="reject"
-                                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold">
-                                                Tolak
-                                            </button>
-                                        </div>
-
-                                    </form>
-
-                                @else
-                                    <span class="text-gray-400 text-xs italic">Sudah diproses</span>
-                                @endif
-                            @endif
-                        </td>
-
-
-
-
                     </tr>
                 @endforeach
 
-                @if(count($ajuan) === 0)
+                @if($ajuan->count() === 0)
                     <tr>
-                        <td colspan="10" class="p-4 text-center text-gray-500 font-medium">
-                            Tidak ada ajuan peminjaman.
-                        </td>
+                        <td colspan="10" class="p-4 text-center text-gray-500">Tidak ada ajuan peminjaman</td>
                     </tr>
                 @endif
-
                 </tbody>
             </table>
+
+            <div class="mt-4">
+                {{ $ajuan->links() }}
+            </div>
         </div>
 
     </div>
+
+    {{-- MODAL DI LUAR TABEL --}}
+    @foreach($ajuan as $item)
+        @php $details = json_decode($item->detail_barang, true) ?? [] @endphp
+        <div id="modal-{{ $item->peminjaman_id }}" class="fixed inset-0 bg-black bg-opacity-40 hidden flex justify-center items-center">
+            <div class="bg-white w-[500px] rounded-xl shadow-lg p-4">
+                <h3 class="font-bold mb-3 text-gray-800">Detail Barang Peminjaman #{{ $item->peminjaman_id }}</h3>
+
+                <table class="w-full text-xs border border-gray-200">
+                    <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="p-2 border-b text-left">Barang</th>
+                        <th class="p-2 border-b text-center">Jumlah</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($details as $d)
+                        <tr class="border-b">
+                            <td class="p-2">{{ $d['barang'] }}</td>
+                            <td class="p-2 text-center">{{ $d['jumlah'] }}</td>
+                        </tr>
+                    @endforeach
+
+                    @if(count($details) === 0)
+                        <tr><td colspan="2" class="p-2 text-center text-gray-500">Tidak ada data barang</td></tr>
+                    @endif
+                    </tbody>
+                </table>
+
+                <div class="flex justify-end mt-4">
+                    <button onclick="closeModal({{ $item->peminjaman_id }})"
+                            class="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-bold">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection
+
+{{-- JS FIX --}}
+@push('scripts')
+    <script>
+        function openModal(id){
+            document.getElementById('modal-'+id)?.classList.remove('hidden');
+        }
+        function closeModal(id){
+            document.getElementById('modal-'+id)?.classList.add('hidden');
+        }
+    </script>
+@endpush

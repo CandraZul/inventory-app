@@ -4,22 +4,22 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Surat Peminjaman</h1>
-            <p class="text-gray-600 mt-1">Daftar semua surat peminjaman dari pengguna</p>
-        </div>
-        
-        <!-- Search Bar -->
-        <div class="w-full md:w-auto">
-            <form action="{{ route('admin.surat.index') }}" method="GET">
-                <div class="relative">
+    <!-- Title Section -->
+    <div class="mb-2">
+        <p class="text-gray-600 text-lg">Daftar semua surat peminjaman dari pengguna</p>
+    </div>
+    
+    <!-- Search Bar dengan Button Cari -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('admin.surat.index') }}" class="flex-1 max-w-xl">
+            <div class="flex gap-2">
+                <div class="relative flex-1">
                     <input type="text" 
                            name="search" 
+                           placeholder="Cari nama pemohon, no HP, atau user..." 
                            value="{{ request('search') }}"
-                           placeholder="Cari nama pemohon, no HP, atau user..."
-                           class="w-full md:w-64 px-4 py-2 pl-10 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                           class="w-full px-4 py-2 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
@@ -30,8 +30,16 @@
                     </a>
                     @endif
                 </div>
-            </form>
-        </div>
+                <button type="submit" 
+                        class="inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium whitespace-nowrap">
+                    <i class="fas fa-search"></i>
+                    <span class="hidden sm:inline">Cari</span>
+                </button>
+            </div>
+        </form>
+        
+        <!-- Kosongkan bagian kanan jika tidak ada -->
+        <div class="hidden md:block"></div>
     </div>
 
     @if(session('success'))

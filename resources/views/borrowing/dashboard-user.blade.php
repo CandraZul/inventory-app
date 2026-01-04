@@ -8,7 +8,7 @@
     <!-- Sapaan User -->
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white shadow-lg">
         <h2 class="text-2xl font-bold mb-2">Halo, {{ auth()->user()->name }}! 👋</h2>
-        <p class="opacity-90">Selamat datang di sistem peminjaman alat Lab PTIK</p>
+        <p class="opacity-90">Selamat datang di Web Peminjaman Alat Lab PTIK</p>
     </div>
 
     <!-- Statistik Cards -->
@@ -69,7 +69,7 @@
                 <ol class="space-y-3 ml-4 text-gray-700">
                     <li class="flex items-start">
                         <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">1</span>
-                        <span><strong>Pilih menu "Pinjam Barang"</strong> di sidebar sebelah kiri</span>
+                        <span><strong>Pilih menu "Pinjam Barang"</strong> di sidebar sebelah kiri atau pada kolom di bawah ini</span>
                     </li>
                     <li class="flex items-start">
                         <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">2</span>
