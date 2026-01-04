@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InventoryController;
+use App\Models\Inventory;
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -71,25 +74,34 @@ class PeminjamanApprovalController extends Controller
     }
 
 
-
-
-
     public function approve($id)
     {
-        DB::table('peminjamans')
-            ->where('id', $id)
-            ->update(['status' => 'dipinjam']);
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        foreach ($peminjaman->details as $detail) {
+            $inventory = $detail->inventory;
+            if (!$inventory || $detail->jumlah > $inventory->jumlah) {
+                return back()->with('error', 'Stok ' . ($inventory->nama_barang ?? 'barang') . ' tidak mencukupi');
+            }
+        }
+
+        $peminjaman->update(['status' => 'dipinjam']);
+
+        // Kurangi stok
+        foreach ($peminjaman->details as $detail) {
+            $inventory = $detail->inventory;
+            $inventory->decrement('jumlah', $detail->jumlah);
+        }
 
         return back()->with('success', 'Pengajuan peminjaman berhasil di-ACC dan status berubah menjadi dipinjam');
     }
 
     public function reject($id)
     {
-        DB::table('peminjamans')
-            ->where('id', $id)
-            ->update(['status' => 'ditolak']);
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->update(['status' => 'ditolak']);
 
-        return back()->with('info', 'Pengajuan peminjaman ditolak');
+        return back()->with('success', 'Pengajuan peminjaman berhasil ditolak');
     }
 
 

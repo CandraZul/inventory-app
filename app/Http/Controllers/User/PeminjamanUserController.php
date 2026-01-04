@@ -252,10 +252,6 @@ class PeminjamanUserController extends Controller
                     'inventory_id' => $item['inventory_id'],
                     'jumlah' => $item['jumlah']
                 ]);
-
-                // Kurangi stok
-                $inventory = Inventory::find($item['inventory_id']);
-                $inventory->decrement('jumlah', $item['jumlah']);
             }
 
             // Kosongkan keranjang
