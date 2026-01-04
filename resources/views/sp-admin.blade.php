@@ -11,7 +11,7 @@
     
     <!-- Search Bar dengan Button Cari -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <!-- Search Form di kiri -->
+        <!-- Search Form -->
         <form method="GET" action="{{ route('admin.surat.index') }}" class="flex-1 max-w-xl">
             <div class="flex gap-2">
                 <div class="relative flex-1">

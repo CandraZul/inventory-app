@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Surat Saya')
-
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
