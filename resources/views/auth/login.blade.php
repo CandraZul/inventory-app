@@ -8,7 +8,7 @@
         <!-- Logo & Title -->
         <div>
             <div class="flex justify-center">
-                <div class="bg-primary-600 text-white p-4 rounded-2xl">
+                <div class="bg-[#475569] text-white p-4 rounded-2xl">
                     <i class="fas fa-laptop-code text-4xl"></i>
                 </div>
             </div>
@@ -65,14 +65,6 @@
                             Ingat saya
                         </label>
                     </div>
-
-                    @if (Route::has('password.request'))
-                        <div class="text-sm">
-                            <a href="{{ route('password.request') }}" class="font-medium text-primary-600 hover:text-primary-500">
-                                Lupa password?
-                            </a>
-                        </div>
-                    @endif
                 </div>
 
                 <div>

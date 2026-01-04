@@ -6,23 +6,38 @@ const profileButton = document.getElementById('profile-button');
 const profileDropdown = document.getElementById('profile-dropdown');
 
 // Toggle sidebar for desktop
-if (sidebarToggle) {
-    sidebarToggle.addEventListener('click', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const icon = document.getElementById('sidebar-toggle-icon');
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    if (!toggleBtn || !sidebar) return;
+
+    toggleBtn.addEventListener('click', () => {
         const isCollapsed = sidebar.classList.contains('w-20');
 
-        if (isCollapsed) {
-            sidebar.classList.remove('w-20');
-            sidebar.classList.add('w-64');
-            sidebarToggle.innerHTML = '<i class="fas fa-chevron-left text-sm"></i>';
-        } else {
-            sidebar.classList.remove('w-64');
-            sidebar.classList.add('w-20');
-            sidebarToggle.innerHTML = '<i class="fas fa-chevron-right text-sm"></i>';
-        }
+        // === UI (langsung) ===
+        sidebar.classList.toggle('w-20', !isCollapsed);
+        sidebar.classList.toggle('w-64', isCollapsed);
+        document.body.classList.toggle('sidebar-collapsed', !isCollapsed);
 
-        localStorage.setItem('sidebar_collapsed', !isCollapsed);
+        icon.classList.toggle('fa-chevron-right', !isCollapsed);
+        icon.classList.toggle('fa-chevron-left', isCollapsed);
+
+        // === SESSION (async) ===
+        fetch('/toggle-sidebar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf
+            },
+            body: JSON.stringify({
+                collapsed: !isCollapsed
+            })
+        });
     });
-}
+});
 
 // Toggle mobile sidebar
 if (mobileMenuButton) {
@@ -60,6 +75,25 @@ document.addEventListener('keydown', function (e) {
         if (profileDropdown) profileDropdown.classList.add('hidden');
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const icon = document.getElementById('sidebar-toggle-icon');
+
+    const isCollapsed = sidebar.classList.contains('w-20');
+
+    // === SYNC STATE SAAT LOAD ===
+    if (isCollapsed) {
+        document.body.classList.add('sidebar-collapsed');
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+    } else {
+        document.body.classList.remove('sidebar-collapsed');
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+    }
+});
+
 
 // Toggle Surat Menu Function
 function toggleSuratMenu() {

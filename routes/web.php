@@ -3,8 +3,11 @@
 use App\Http\Controllers\Auth\RegisterAdminController;
 use App\Http\Controllers\Auth\RegisterDosenController;
 use App\Http\Controllers\Auth\RegisterMahasiswaController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\SuratPinjamAdmSideController;
+
 use App\Http\Controllers\User\SuratController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\User\PeminjamanUserController;
@@ -16,23 +19,28 @@ use App\Http\Controllers\Admin\PengembalianController;
 use \App\Http\Controllers\Admin\SuratAdminController;
 
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+
+Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
+    Route::get('/admin/dashboard', [HomeController::class, 'adminDashboard'])->name('dashboard.admin');
+    // Inventory
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+    Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+});
+
+Route::middleware('auth')->prefix('borrowing')->name('borrowing.')->group(function () {
+    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])->name('dashboard');
+});
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
 Auth::routes();
 
 Route::redirect('/home', '/');
-
-// tak matiin dulu ya
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::view('/admin', 'admin');
-});
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'dashboard');
@@ -61,13 +69,25 @@ Route::post('/toggle-sidebar', [SidebarController::class, 'toggle'])
     ->middleware(['auth'])
     ->name('toggle-sidebar');
 
-// Inventory
-Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
-Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
-Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
-Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
-Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+
+
+
+Route::middleware(['auth'])->prefix('borrowing')->group(function () {
+
+    // dashboard user peminjaman
+    Route::get('/dashboard', [PeminjamanUserController::class, 'dashboard'])
+        ->name('borrowing.dashboard');
+
+    // halaman pinjam barang
+    Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
+        ->name('borrowing.pinjam');
+    Route::post('/pinjam', [PeminjamanUserController::class, 'store'])
+    ->name('borrowing.store');
+
+    // riwayat peminjaman
+    Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
+        ->name('borrowing.riwayat');
+});
 
 //User Interface (Side Pengguna)
 Route::middleware(['auth'])->prefix('borrowing')->name('borrowing.')->group(function () {
@@ -129,7 +149,10 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/approval/peminjaman', [PeminjamanApprovalController::class, 'index'])
         ->name('approval.peminjaman.index');
@@ -143,7 +166,15 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/admin/riwayat', [RiwayatPeminjamanController::class, 'index'])
         ->name('admin.riwayat.index');
 
+<<<<<<< HEAD
 
+=======
+    Route::get('/surat-peminjaman', [SuratPinjamAdmSideController::class, 'index'])
+    ->name('admin.surat.index');
+
+    Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
+    ->name('admin.surat.download');
+>>>>>>> develop
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
@@ -161,6 +192,7 @@ Route::middleware(['auth', 'role:admin|super admin'])
 
 
     });
+<<<<<<< HEAD
 
 Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function(){
     Route::get('/', [SuratAdminController::class, 'index'])->name('index');
@@ -169,3 +201,5 @@ Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->nam
 
 
 
+=======
+>>>>>>> develop

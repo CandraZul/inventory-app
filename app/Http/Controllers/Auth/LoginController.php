@@ -28,7 +28,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
-    
+
     /**
      * TAMBAHKAN METHOD INI UNTUK HANDLE REDIRECT BERDASARKAN ROLE
      * (TANPA MENGUBAH LOGIC LAIN)
@@ -37,9 +37,9 @@ class LoginController extends Controller
     {
         // Hanya tambahkan logic redirect, tidak mengubah yang lain
         if ($user->hasRole(['admin', 'super admin'])) {
-            return redirect('/admin');
+            return redirect('/');
         }
-        
+
         // Default tetap ke borrowing/dashboard (untuk mahasiswa/dosen)
         return redirect('/borrowing/dashboard');
     }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - Inventory TIK</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
@@ -15,7 +16,7 @@
 
     @stack('styles')
 </head>
-<body class="font-sans bg-gray-50">
+<body class="font-sans bg-gray-50 ">
 <!-- Sidebar & Navbar untuk user terautentikasi -->
 @auth
     @php
@@ -37,20 +38,25 @@
             <!-- Logo -->
             <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200">
                 <div class="flex items-center space-x-3 overflow-hidden">
-                    <div class="shrink-0 w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-laptop-code text-white text-sm"></i>
+                    <div class="logo-icon shrink-0 bg-accent-500 rounded-lg flex items-center justify-center
+                                transition-all duration-300
+                                w-8 h-8">
+                        <i class="fas fa-laptop-code text-white transition-all duration-300 text-sm"></i>
                     </div>
-                    @if(!session('sidebar_collapsed'))
+                    <div class="sidebar-text flex flex-col">
                         <span class="text-lg font-semibold text-gray-800 whitespace-nowrap">Inventory TIK</span>
                         <span class="text-xs px-2 py-1 rounded {{ $isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }}">
                             {{ $isAdmin ? 'Admin' : 'User' }}
                         </span>
-                    @endif
+                    </div>
                 </div>
 
                 <!-- Toggle Button untuk Desktop -->
                 <button id="sidebar-toggle" class="hidden md:flex p-1.5 rounded-lg hover:bg-gray-100 text-gray-500">
-                    <i class="fas {{ session('sidebar_collapsed') ? 'fa-chevron-right' : 'fa-chevron-left' }} text-sm"></i>
+                    <i id="sidebar-toggle-icon"
+                       class="fas {{ session('sidebar_collapsed') ? 'fa-chevron-right' : 'fa-chevron-left' }} text-sm">
+                    </i>
+
                 </button>
             </div>
 
@@ -66,9 +72,7 @@
               {{ request()->routeIs('dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-tachometer-alt w-5 text-center
                  {{ request()->routeIs('dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Dashboard</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Dashboard</span>
                     </a>
 
                     <!-- Inventori -->
@@ -77,9 +81,7 @@
               {{ request()->routeIs('inventory.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-boxes w-5 text-center
                  {{ request()->routeIs('inventory.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Inventori</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Inventori</span>
                     </a>
 
                     <!-- Manajemen User -->
@@ -88,9 +90,7 @@
               {{ request()->routeIs('users.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-users w-5 text-center
                  {{ request()->routeIs('users.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Pengguna</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Pengguna</span>
                     </a>
 
                     <!-- Approval Pengajuan Peminjaman -->
@@ -99,9 +99,13 @@
               {{ request()->routeIs('approval.peminjaman.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-clipboard-check w-5 text-center
                  {{ request()->routeIs('approval.peminjaman.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+<<<<<<< HEAD
                         @if(!session('sidebar_collapsed'))
                             <span class="ml-3 font-medium">Kelola Peminjaman</span>
                         @endif
+=======
+                            <span class="sidebar-text ml-3 font-medium">Approval Peminjaman</span>
+>>>>>>> develop
                     </a>
 
                     <!-- Kelola Pengembalian -->
@@ -126,6 +130,7 @@
        {{ request()->routeIs('admin.riwayat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-history w-5 text-center
         {{ request()->routeIs('admin.riwayat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+<<<<<<< HEAD
                         @if(!session('sidebar_collapsed'))
                             <span class="ml-3 font-medium">Laporan Riwayat</span>
                         @endif
@@ -144,6 +149,17 @@
 
 
 
+=======
+                            <span class="sidebar-text ml-3 font-medium">Riwayat Peminjaman</span>
+                    </a>
+                    <!-- Surat Peminjaman Admin Area -->
+                    <a href="{{ route('admin.surat.index') }}"
+                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('admin.surat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        <span class="sidebar-text ml-3 font-medium">Surat Peminjaman</span>
+                    </a>
+        
+>>>>>>> develop
 
                     @endhasanyrole
 
@@ -152,52 +168,37 @@
                     <a href="{{ route('borrowing.dashboard') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-home w-5 text-center {{ request()->routeIs('borrowing.dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Beranda</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Beranda</span>
                     </a>
 
                     <a href="{{ route('borrowing.pinjam') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.pinjam') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-cart-plus w-5 text-center {{ request()->routeIs('borrowing.pinjam') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Pinjam Barang</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Pinjam Barang</span>
                     </a>
 
                     <a href="{{ route('borrowing.cart') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.cart') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-shopping-cart w-5 text-center {{ request()->routeIs('borrowing.cart') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Keranjang Saya</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Keranjang Saya</span>
                     </a>
 
                     <a href="{{ route('borrowing.riwayat') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.riwayat') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-history w-5 text-center {{ request()->routeIs('borrowing.riwayat') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Riwayat Saya</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Riwayat Saya</span>
                     </a>
-
                     <!-- Surat Saya -->
                     <div class="space-y-1">
                         <button type="button" onclick="toggleSuratMenu()"
                                 class="sidebar-item w-full flex items-center justify-between px-3 py-2.5 rounded-lg {{ request()->routeIs('borrowing.surat.*') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                             <div class="flex items-center">
                                 <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('borrowing.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                                @if(!session('sidebar_collapsed'))
-                                    <span class="ml-3 font-medium">Surat Saya</span>
-                                @endif
+                                    <span class="sidebar-text ml-3 font-medium">Surat Saya</span>
                             </div>
-                            @if(!session('sidebar_collapsed'))
                                 <i id="surat-arrow"
                                    class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
-                            @endif
                         </button>
-
-                        @if(!session('sidebar_collapsed'))
                             <div id="surat-submenu"
                                  class="ml-10 space-y-1 mt-1 {{ request()->routeIs('borrowing.surat.*') ? '' : 'hidden' }}">
                                 <a href="{{ route('borrowing.surat.upload') }}"
@@ -208,12 +209,7 @@
                                    class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.list') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
                                     <i class="fas fa-list w-4 text-center mr-2"></i> Daftar Surat
                                 </a>
-                                <a href="{{ route('borrowing.surat.template') }}"
-                                   class="sidebar-item flex items-center px-3 py-2 rounded-lg text-sm {{ request()->routeIs('borrowing.surat.template') ? 'text-accent-600 bg-accent-50' : 'text-gray-600 hover:text-gray-900' }}">
-                                    <i class="fas fa-download w-4 text-center mr-2"></i> Template Surat
-                                </a>
                             </div>
-                        @endif
                     </div>
                     @endhasanyrole
 
@@ -228,9 +224,7 @@
                     <a href="{{ route('profile') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg {{ request()->routeIs('profile') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-user w-5 text-center {{ request()->routeIs('profile') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Profil Saya</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Profil Saya</span>
                     </a>
 
                     <!-- Logout (tidak diubah, tetap dipertahankan) -->
@@ -239,9 +233,7 @@
                         <button type="submit"
                                 class="sidebar-item flex items-center w-full px-3 py-2.5 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                             <i class="fas fa-sign-out-alt w-5 text-center text-gray-500"></i>
-                            @if(!session('sidebar_collapsed'))
-                                <span class="ml-3 font-medium">Keluar</span>
-                            @endif
+                                <span class="sidebar-text ml-3 font-medium">Keluar</span>
                         </button>
                     </form>
 
@@ -360,13 +352,6 @@
                                     <i class="fas fa-user mr-3 text-gray-500"></i>
                                     Profil Saya
                                 </a>
-                                @if($isAdmin)
-                                    <a href="#"
-                                       class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-cog mr-3 text-gray-500"></i>
-                                        Pengaturan Admin
-                                    </a>
-                                @endif
                                 <div class="border-t border-gray-200 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -438,8 +423,10 @@
         </div>
     </div>
 
+
     <script src="{{asset("scripts/sidebar-toggle.js")}}"></script>
     <script src="{{asset('scripts/tailwind-config.js')}}"></script>
+
 @endauth
 
 <!-- Konten untuk guest (login/register) -->
