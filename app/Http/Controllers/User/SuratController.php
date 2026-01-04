@@ -15,7 +15,7 @@ class SuratController extends Controller
     {
         return view('borrowing.upload-surat');
     }
-    
+
     // Simpan surat yang diupload
     public function store(Request $request)
     {
@@ -31,22 +31,22 @@ class SuratController extends Controller
             'surat.mimes' => 'File harus berupa PDF atau Word (doc, docx)',
             'surat.max' => 'Ukuran file maksimal 5MB'
         ]);
-        
+
         try {
             // Upload file
             if ($request->hasFile('surat')) {
                 $file = $request->file('surat');
                 $user = Auth::user();
-                
+
                 // Generate nama file yang aman
                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $safeName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $originalName);
                 $fileName = 'surat_' . $user->id . '_' . time() . '_' . $safeName . '.' . $extension;
-                
+
                 // Simpan file ke storage
                 $path = $file->storeAs('surat_peminjaman', $fileName, 'public');
-                
+
                 // Simpan ke database
                 SuratPeminjaman::create([
                     'user_id' => $user->id,
@@ -58,31 +58,31 @@ class SuratController extends Controller
                     'surat_path' => $path,
                     'status' => 'pending'
                 ]);
-                
+
                 return redirect()->route('borrowing.dashboard')
                     ->with('success', '✅ Surat berhasil diupload! Admin akan memverifikasi dalam 1-2 hari kerja.');
             }
-            
+
             return back()->with('error', '❌ Gagal mengupload file');
-            
+
         } catch (\Exception $e) {
             return back()->with('error', '❌ Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
     public function downloadTemplate()
     {
         $templatePath = storage_path('app/public/templates/template_surat_pinjam_new.docx');
-        
+
         if (!file_exists($templatePath)) {
             return back()->with('error', 'File template tidak ditemukan. Hubungi admin.');
         }
-        
+
         $timestamp = time();
         $fileName = "Template_Surat_Peminjaman_{$timestamp}.docx";
-        
+
         return response()->download(
-            $templatePath, 
+            $templatePath,
             $fileName,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -92,31 +92,31 @@ class SuratController extends Controller
             ]
         );
     }
-    
+
     // Template default buat jaga-jaga
     private function createDefaultTemplate()
     {
         $templateDir = storage_path('app/public/templates');
-        
+
         // Buat folder jika belum ada
         if (!is_dir($templateDir)) {
             mkdir($templateDir, 0755, true);
         }
-        
+
         $templatePath = $templateDir . '/template_surat_pinjaman.docx';
-        
+
         // Isi template sederhana dalam format text
         $templateContent = "SURAT PERMOHONAN PEMINJAMAN ALAT LABORATORIUM PTIK\n\n";
-        
+
         // Simpan sebagai .txt dulu (bisa diganti dengan .docx nanti)
         file_put_contents($templateDir . '/template_surat_pinjaman.txt', $templateContent);
-        
+
         // Copy ke .docx (format sederhana)
         copy($templateDir . '/template_surat_pinjaman.txt', $templatePath);
-        
+
         return file_exists($templatePath);
     }
-    
+
     // Menampilkan daftar surat jiakhh
     public function index()
     {
@@ -124,7 +124,7 @@ class SuratController extends Controller
         $suratList = SuratPeminjaman::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+
         return view('borrowing.daftar-surat', compact('suratList'));
     }
 
@@ -136,15 +136,15 @@ class SuratController extends Controller
             ->where('user_id', $user->id)
             ->where('status', 'pending')
             ->firstOrFail();
-        
+
         // Hapus file dari storage
         if ($surat->surat_path && Storage::disk('public')->exists($surat->surat_path)) {
             Storage::disk('public')->delete($surat->surat_path);
         }
-        
+
         // Hapus dari database
         $surat->delete();
-        
+
         return redirect()->route('borrowing.surat.list')
             ->with('success', 'Surat berhasil dibatalkan');
     }

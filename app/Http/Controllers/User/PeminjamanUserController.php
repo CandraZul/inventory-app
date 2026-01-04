@@ -252,10 +252,6 @@ class PeminjamanUserController extends Controller
                     'inventory_id' => $item['inventory_id'],
                     'jumlah' => $item['jumlah']
                 ]);
-
-                // Kurangi stok
-                $inventory = Inventory::find($item['inventory_id']);
-                $inventory->decrement('jumlah', $item['jumlah']);
             }
 
             // Kosongkan keranjang
@@ -279,20 +275,21 @@ class PeminjamanUserController extends Controller
     {
         $user = Auth::user();
 
-        $query = Peminjaman::with(['details.inventory'])
+        $riwayat = Peminjaman::with(['details.inventory'])
             ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc');
-
-        // Filter by status
-        if ($request->status) {
-            $query->where('status', $request->status);
-        }
-
-        // Paginate result
-        $riwayat = $query->paginate(10)->withQueryString();
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('borrowing.riwayat', compact('riwayat'));
     }
+
+
+
+
 
     public function approvalIndex()
     {

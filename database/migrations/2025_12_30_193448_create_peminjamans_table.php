@@ -13,7 +13,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id');
 
-            $table->enum('status', ['pending', 'dipinjam', 'kembali'])
+            $table->enum('status', ['pending', 'dipinjam', 'kembali', 'ditolak'])
                   ->default('pending');
 
             $table->timestamp('tanggal_pinjam')->useCurrent();

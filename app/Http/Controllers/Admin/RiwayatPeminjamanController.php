@@ -3,63 +3,55 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class RiwayatPeminjamanController extends Controller
 {
     public function index(Request $request)
     {
-        // Riwayat peminjaman barang
-        $riwayatBarang = DB::table('peminjaman_details as d')
-            ->join('peminjamans as p', 'p.id', '=', 'd.peminjaman_id')
-            ->join('users as u', 'u.id', '=', 'p.user_id')
+        $data = DB::table('peminjamans as p')
+            ->join('peminjaman_details as d', 'd.peminjaman_id', '=', 'p.id')
             ->join('inventories as i', 'i.id', '=', 'd.inventory_id')
+            ->join('users as u', 'u.id', '=', 'p.user_id')
             ->leftJoin('profiles_mahasiswa as mhs', 'mhs.user_id', '=', 'u.id')
             ->leftJoin('profiles_dosen as dsn', 'dsn.user_id', '=', 'u.id')
             ->select([
-                'd.id as riwayat_id',
                 'p.id as peminjaman_id',
-                'u.id as user_id',
-                'i.id as barang_id',
-                'u.name as nama_user',
+                'p.user_id as user_id',
+                'u.name as peminjam',
                 DB::raw('COALESCE(mhs.nim, dsn.nip) as identitas'),
-                DB::raw('COALESCE(mhs.kontak, dsn.kontak) as kontak'),
-                'i.nama_barang',
+                'u.email as kontak',
                 'p.status',
                 'p.tanggal_pinjam',
                 'p.tanggal_kembali',
-                DB::raw('"barang" as jenis')
-            ]);
-
-        // Riwayat surat yang sudah di acc
-        $riwayatSurat = DB::table('surat_peminjamans as s')
-            ->join('users as u', 'u.id', '=', 's.user_id')
-            ->leftJoin('profiles_mahasiswa as mhs', 'mhs.user_id', '=', 'u.id')
-            ->leftJoin('profiles_dosen as dsn', 'dsn.user_id', '=', 'u.id')
-            ->select([
-                's.id as riwayat_id',
-                's.peminjaman_id as peminjaman_id',
-                'u.id as user_id',
-                DB::raw('NULL as barang_id'),
-                'u.name as nama_user',
-                DB::raw('COALESCE(mhs.nim, dsn.nip) as identitas'),
-                'u.email as kontak',
-                DB::raw('s.keperluan as nama_barang'),
-                's.status',
-                's.tanggal_mulai as tanggal_pinjam',
-                's.tanggal_selesai as tanggal_kembali',
-                DB::raw('"surat" as jenis')
+                DB::raw('(SELECT JSON_ARRAYAGG(JSON_OBJECT("nama", iv.nama_barang, "jumlah", det.jumlah))
+                          FROM peminjaman_details as det
+                          JOIN inventories as iv ON iv.id = det.inventory_id
+                          WHERE det.peminjaman_id = p.id) as items')
             ])
-            ->where('s.status', 'approved');
+            ->orderByDesc('p.tanggal_pinjam')
+            ->groupBy('p.id','p.user_id','u.name','mhs.nim','dsn.nip','u.email','p.status','p.tanggal_pinjam','p.tanggal_kembali')
+            ->get();
 
-        // Gabungkan pakai UNION ALL lalu paginate
-        $data = DB::query()
-            ->fromSub($riwayatBarang->unionAll($riwayatSurat), 'x')
-            ->orderByDesc('tanggal_pinjam')
-            ->paginate(10);
+        $data = $data->map(function($item){
+            $item->role = User::find($item->user_id)?->getRoleNames()->first() ?? '-';
+            return $item;
+        });
 
-        return view('admin.riwayat.index', compact('data'));
+        $page = $request->get('page', 1);
+        $perPage = 10;
+
+        $paginator = new LengthAwarePaginator(
+            $data->forPage($page, $perPage),
+            $data->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('admin.riwayat.index', ['data' => $paginator]);
     }
-
 }
