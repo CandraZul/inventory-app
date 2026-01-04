@@ -92,9 +92,9 @@
                         </div>
                     </div>
                     <div class="ml-4 flex-1">
-                        <p class="text-sm font-medium text-gray-900">{{ $activity->user_name }} - {{ $activity->item_name }}</p>
-                        <p class="text-sm text-gray-600">{{ $activity->description }}</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $activity->created_at->format('d M Y, H:i') }}</p>
+                        <p class="text-sm font-medium text-gray-900">{{ $activity->peminjam }} - {{ $activity->nama_barang }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ \Carbon\Carbon::parse($activity->created_at)->format('d M Y, H:i') }}
+                        </p>
                     </div>
                     <span class="px-2 py-1 text-xs font-semibold rounded-full
                         @if($activity->status == 'dipinjam') bg-blue-100 text-blue-800
@@ -128,12 +128,12 @@
                             <i class="fas fa-microchip text-yellow-600"></i>
                         </div>
                         <div>
-                            <p class="font-medium text-gray-900">{{ $item->name }}</p>
-                            <p class="text-sm text-gray-600">{{ $item->category }}</p>
+                            <p class="font-medium text-gray-900">{{ $item->nama_barang }}</p>
+                            <p class="text-sm text-gray-600">{{ $item->merk }}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="text-lg font-bold text-red-600">{{ $item->stock }}</p>
+                        <p class="text-lg font-bold text-red-600">{{ $item->jumlah }}</p>
                         <p class="text-xs text-gray-500">stok tersisa</p>
                     </div>
                 </div>
@@ -144,14 +144,6 @@
                     <p>Semua stok dalam kondisi baik</p>
                 </div>
             @endif
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-            <h3 class="text-lg font-medium text-gray-800 mb-4">Aksi Cepat</h3>
-            <div class="grid grid-cols-2 gap-4">
-
-            </div>
         </div>
     </div>
 </div>
