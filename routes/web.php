@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeminjamanApprovalController;
 use App\Http\Controllers\Admin\RiwayatPeminjamanController;
 use App\Http\Controllers\Admin\PengembalianController;
+use \App\Http\Controllers\Admin\SuratAdminController;
 
 
 Route::get('/', function () {
@@ -160,6 +161,10 @@ Route::middleware(['auth', 'role:admin|super admin'])
 
 
     });
+
+Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function(){
+    Route::get('/', [SuratAdminController::class, 'index'])->name('index');
+});
 
 
 

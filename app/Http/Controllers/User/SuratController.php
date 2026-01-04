@@ -50,17 +50,21 @@ class SuratController extends Controller
                 
                 // Simpan ke database
                 SuratPeminjaman::create([
+                    'peminjaman_id' => $request->peminjaman_id,
                     'user_id' => $user->id,
                     'nama_pemohon' => $request->nama_pemohon,
                     'no_hp' => $request->no_hp,
                     'keperluan' => $request->keperluan,
-                    'tanggal_mulai' => $request->tanggal_mulai,
-                    'tanggal_selesai' => $request->tanggal_selesai,
                     'surat_path' => $path,
                     'status' => 'pending',
-                    'peminjaman_id' => $request->peminjaman_id
+                    'catatan_admin' => null,
+                    'tanggal_mulai' => $request->tanggal_mulai,
+                    'tanggal_selesai' => $request->tanggal_selesai,
+                    'barang_dipinjam' => $request->barang ? json_encode($request->barang) : null
                 ]);
-                
+
+
+
                 return redirect()->route('borrowing.dashboard')
                     ->with('success', '✅ Surat berhasil diupload! Admin akan memverifikasi dalam 1-2 hari kerja.');
             }

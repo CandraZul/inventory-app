@@ -131,6 +131,19 @@
                         @endif
                     </a>
 
+                    <!-- Surat Peminjaman (Admin & Super Admin) -->
+                    <a href="{{ route('admin.surat.index') }}"
+                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
+   {{ request()->routeIs('admin.surat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
+                        <i class="fas fa-file-signature w-5 text-center
+   {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                        @if(!session('sidebar_collapsed'))
+                            <span class="ml-3 font-medium">Surat Peminjaman</span>
+                        @endif
+                    </a>
+
+
+
 
                     @endhasanyrole
 
