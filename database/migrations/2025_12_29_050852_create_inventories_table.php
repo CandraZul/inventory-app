@@ -9,24 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('profiles_dosen', function (Blueprint $table) {
+        Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
-            $table->string('nip')->unique();
-            $table->string('kontak');
+            $table->string('nama_barang');
+            $table->string('merk');
+            $table->integer('jumlah');
+            $table->string('kondisi');
+            $table->string('lokasi');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade') ;
         });
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles_dosen');
+        Schema::dropIfExists('inventories');
     }
 };

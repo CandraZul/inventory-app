@@ -11,7 +11,14 @@
         <div class="flex justify-between items-start">
             <div>
                 <p class="text-sm text-gray-500">Total Inventori</p>
-                <p class="text-3xl font-bold text-gray-800 mt-2">@if(isset($stats['total_items'])){{ $stats['total_items'] }}@else 0 @endif</p>
+
+                <p class="text-3xl font-bold text-gray-800 mt-2">
+                    @if(isset($stats['total_items']))
+                        {{ $stats['total_items'] }}
+                    @else
+                        0
+                    @endif
+                </p>
                 <p class="text-sm text-gray-600 mt-2">Item tersedia</p>
             </div>
             <div class="bg-primary-100 p-3 rounded-lg">
