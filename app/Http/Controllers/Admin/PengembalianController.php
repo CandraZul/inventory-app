@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -58,11 +59,11 @@ class PengembalianController extends Controller
     public function updateTanggalKembali(Request $request, $id)
     {
         $tanggal = $request->tanggal_kembali;
+        $peminjaman = Peminjaman::find($id);
 
         if (empty($tanggal)) {
             $tanggal = now()->toDateString(); // hasil: 2026-01-04 (tanpa waktu)
         }
-
 
         DB::table('peminjamans')
             ->where('id', $id)
@@ -71,9 +72,11 @@ class PengembalianController extends Controller
                 'status' => 'kembali' // ← ini sudah valid dan memang status final kamu
             ]);
 
+        foreach ($peminjaman->details as $detail) {
+            $inventory = $detail->inventory;
+            $inventory->increment('jumlah', $detail->jumlah);
+        }
+
         return back()->with('success', 'Tanggal kembali berhasil disimpan');
     }
-
-
-
 }
