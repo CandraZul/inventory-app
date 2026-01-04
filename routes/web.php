@@ -70,8 +70,6 @@ Route::post('/toggle-sidebar', [SidebarController::class, 'toggle'])
     ->name('toggle-sidebar');
 
 
-
-
 Route::middleware(['auth'])->prefix('borrowing')->group(function () {
 
     // dashboard user peminjaman
@@ -82,7 +80,7 @@ Route::middleware(['auth'])->prefix('borrowing')->group(function () {
     Route::get('/pinjam', [PeminjamanUserController::class, 'index'])
         ->name('borrowing.pinjam');
     Route::post('/pinjam', [PeminjamanUserController::class, 'store'])
-    ->name('borrowing.store');
+        ->name('borrowing.store');
 
     // riwayat peminjaman
     Route::get('/riwayat', [PeminjamanUserController::class, 'riwayat'])
@@ -149,10 +147,6 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/approval/peminjaman', [PeminjamanApprovalController::class, 'index'])
         ->name('approval.peminjaman.index');
@@ -166,15 +160,11 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/admin/riwayat', [RiwayatPeminjamanController::class, 'index'])
         ->name('admin.riwayat.index');
 
-<<<<<<< HEAD
-
-=======
     Route::get('/surat-peminjaman', [SuratPinjamAdmSideController::class, 'index'])
-    ->name('admin.surat.index');
+        ->name('admin.surat.index');
 
     Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
-    ->name('admin.surat.download');
->>>>>>> develop
+        ->name('admin.surat.download');
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
@@ -190,16 +180,9 @@ Route::middleware(['auth', 'role:admin|super admin'])
             ->name('admin.peminjaman.details');
 
 
-
     });
-<<<<<<< HEAD
 
-Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function(){
+Route::middleware(['auth', 'role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function () {
     Route::get('/', [SuratAdminController::class, 'index'])->name('index');
 });
 
-
-
-
-=======
->>>>>>> develop

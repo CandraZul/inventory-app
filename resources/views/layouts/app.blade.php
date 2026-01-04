@@ -158,7 +158,7 @@
                         <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                         <span class="sidebar-text ml-3 font-medium">Surat Peminjaman</span>
                     </a>
-        
+
 >>>>>>> develop
 
                     @endhasanyrole
