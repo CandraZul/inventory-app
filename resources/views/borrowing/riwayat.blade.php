@@ -22,6 +22,7 @@
                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                 <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
                 <option value="kembali" {{ request('status') == 'kembali' ? 'selected' : '' }}>Kembali</option>
+                <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
             </select>
         </form>
     </div>
@@ -130,49 +131,59 @@
     @endif
 
     <!-- Statistik Card -->
-    <div class="bg-white rounded-xl shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <div class="bg-white rounded-xl shadow p-4">
+        <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
             <i class="fas fa-chart-pie text-blue-500"></i>
             Statistik Peminjaman
         </h3>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-yellow-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-yellow-700">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div class="bg-yellow-50 p-3 rounded-lg text-center">
+                <div class="text-2xl font-bold text-yellow-700">
                     {{ $riwayat->where('status', 'pending')->count() }}
                 </div>
-                <div class="text-yellow-600 mt-1">
+                <div class="text-sm text-yellow-600 mt-1">
                     <i class="fas fa-clock mr-1"></i>Menunggu
                 </div>
             </div>
-            
-            <div class="bg-blue-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-blue-700">
+
+            <div class="bg-blue-50 p-3 rounded-lg text-center">
+                <div class="text-2xl font-bold text-blue-700">
                     {{ $riwayat->where('status', 'dipinjam')->count() }}
                 </div>
-                <div class="text-blue-600 mt-1">
+                <div class="text-sm text-blue-600 mt-1">
                     <i class="fas fa-box-open mr-1"></i>Dipinjam
                 </div>
             </div>
-            
-            <div class="bg-green-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-green-700">
+
+            <div class="bg-green-50 p-3 rounded-lg text-center">
+                <div class="text-2xl font-bold text-green-700">
                     {{ $riwayat->where('status', 'kembali')->count() }}
                 </div>
-                <div class="text-green-600 mt-1">
+                <div class="text-sm text-green-600 mt-1">
                     <i class="fas fa-check-circle mr-1"></i>Dikembalikan
                 </div>
             </div>
-            
-            <div class="bg-gray-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-gray-700">
+
+            <div class="bg-red-50 p-3 rounded-lg text-center">
+                <div class="text-2xl font-bold text-red-700">
+                    {{ $riwayat->where('status', 'ditolak')->count() }}
+                </div>
+                <div class="text-sm text-red-600 mt-1">
+                    <i class="fas fa-times-circle mr-1"></i>Ditolak
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-3 rounded-lg text-center">
+                <div class="text-2xl font-bold text-gray-700">
                     {{ $riwayat->count() }}
                 </div>
-                <div class="text-gray-600 mt-1">
+                <div class="text-sm text-gray-600 mt-1">
                     <i class="fas fa-list mr-1"></i>Total
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 @endsection
