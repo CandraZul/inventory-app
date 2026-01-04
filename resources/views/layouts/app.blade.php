@@ -99,13 +99,7 @@
               {{ request()->routeIs('approval.peminjaman.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-clipboard-check w-5 text-center
                  {{ request()->routeIs('approval.peminjaman.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-<<<<<<< HEAD
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Kelola Peminjaman</span>
-                        @endif
-=======
-                            <span class="sidebar-text ml-3 font-medium">Approval Peminjaman</span>
->>>>>>> develop
+                            <span class="sidebar-text ml-3 font-medium">Kelola Peminjaman</span>
                     </a>
 
                     <!-- Kelola Pengembalian -->
@@ -115,10 +109,7 @@
 
                         <i class="fas fa-undo-alt w-5 text-center
    {{ request()->routeIs('admin.pengembalian.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Kelola Pengembalian</span>
-                        @endif
+                            <span class="sidebar-text ml-3 font-medium">Kelola Pengembalian</span>
                     </a>
 
 
@@ -130,27 +121,7 @@
        {{ request()->routeIs('admin.riwayat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-history w-5 text-center
         {{ request()->routeIs('admin.riwayat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-<<<<<<< HEAD
-                        @if(!session('sidebar_collapsed'))
                             <span class="ml-3 font-medium">Laporan Riwayat</span>
-                        @endif
-                    </a>
-
-                    <!-- Surat Peminjaman (Admin & Super Admin) -->
-                    <a href="{{ route('admin.surat.index') }}"
-                       class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
-   {{ request()->routeIs('admin.surat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
-                        <i class="fas fa-file-signature w-5 text-center
-   {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                        @if(!session('sidebar_collapsed'))
-                            <span class="ml-3 font-medium">Surat Peminjaman</span>
-                        @endif
-                    </a>
-
-
-
-=======
-                            <span class="sidebar-text ml-3 font-medium">Riwayat Peminjaman</span>
                     </a>
                     <!-- Surat Peminjaman Admin Area -->
                     <a href="{{ route('admin.surat.index') }}"
@@ -158,8 +129,6 @@
                         <i class="fas fa-file-alt w-5 text-center {{ request()->routeIs('admin.surat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                         <span class="sidebar-text ml-3 font-medium">Surat Peminjaman</span>
                     </a>
-        
->>>>>>> develop
 
                     @endhasanyrole
 

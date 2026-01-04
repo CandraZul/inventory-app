@@ -149,10 +149,6 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout');
 
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/approval/peminjaman', [PeminjamanApprovalController::class, 'index'])
         ->name('approval.peminjaman.index');
@@ -166,15 +162,11 @@ Route::middleware(['auth', 'role:admin|super admin'])->group(function () {
     Route::get('/admin/riwayat', [RiwayatPeminjamanController::class, 'index'])
         ->name('admin.riwayat.index');
 
-<<<<<<< HEAD
-
-=======
     Route::get('/surat-peminjaman', [SuratPinjamAdmSideController::class, 'index'])
     ->name('admin.surat.index');
 
     Route::get('/surat-peminjaman/download/{id}', [SuratPinjamAdmSideController::class, 'download'])
     ->name('admin.surat.download');
->>>>>>> develop
 });
 
 Route::middleware(['auth', 'role:admin|super admin'])
@@ -192,7 +184,6 @@ Route::middleware(['auth', 'role:admin|super admin'])
 
 
     });
-<<<<<<< HEAD
 
 Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->name('admin.surat.')->group(function(){
     Route::get('/', [SuratAdminController::class, 'index'])->name('index');
@@ -200,6 +191,3 @@ Route::middleware(['auth','role:admin|super admin'])->prefix('admin/surat')->nam
 
 
 
-
-=======
->>>>>>> develop
