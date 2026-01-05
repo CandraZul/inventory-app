@@ -21,6 +21,7 @@
 @auth
     @php
         $isAdmin = auth()->user()->hasRole('admin');
+        $role = auth()->user()->getRoleNames()->first();
         $isUser = auth()->user()->hasRole('mahasiswa');
         $dashboardRoute = $isAdmin ? route('dashboard') : route('borrowing.dashboard');
         $dashboardName = $isAdmin ? 'Dashboard' : 'Dashboard User';
@@ -46,7 +47,7 @@
                     <div class="sidebar-text flex flex-col">
                         <span class="text-lg font-semibold text-gray-800 whitespace-nowrap">Inventory TIK</span>
                         <span class="text-xs px-2 py-1 rounded {{ $isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }}">
-                            {{ $isAdmin ? 'Admin' : 'User' }}
+                            {{ $role ?? ''}}
                         </span>
                     </div>
                 </div>
@@ -69,9 +70,9 @@
                     <!-- Dashboard -->
                     <a href="{{ route('dashboard') }}"
                        class="sidebar-item flex items-center px-3 py-2.5 rounded-lg
-              {{ request()->routeIs('dashboard') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
+              {{ request()->routeIs('dashboard.admin') ? 'active-sidebar-item text-accent-600' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-tachometer-alt w-5 text-center
-                 {{ request()->routeIs('dashboard') ? 'text-accent-600' : 'text-gray-500' }}"></i>
+                 {{ request()->routeIs('dashboard.admin') ? 'text-accent-600' : 'text-gray-500' }}"></i>
                             <span class="sidebar-text ml-3 font-medium">Dashboard</span>
                     </a>
 
@@ -121,7 +122,7 @@
        {{ request()->routeIs('admin.riwayat.*') ? 'active-sidebar-item text-accent-600 bg-accent-50' : 'text-gray-700 hover:text-gray-900' }}">
                         <i class="fas fa-history w-5 text-center
         {{ request()->routeIs('admin.riwayat.*') ? 'text-accent-600' : 'text-gray-500' }}"></i>
-                            <span class="ml-3 font-medium">Laporan Riwayat</span>
+                            <span class="sidebar-text ml-3 font-medium">Laporan Riwayat</span>
                     </a>
                     <!-- Surat Peminjaman Admin Area -->
                     <a href="{{ route('admin.surat.index') }}"
